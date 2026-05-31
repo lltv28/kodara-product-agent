@@ -16,6 +16,11 @@ The agent synthesizes three books into one operating doctrine:
 |---|---|
 | `kodara-cpo-system-prompt.md` | The CPO agent's system prompt. Stable doctrine + grounded Kodara context. This is the file you load into the `system` field. |
 | `source-material/vsl-transcript.md` | The Video Sales Letter transcript — the **authoritative statement of Kodara's _promised_ value**. The agent uses this as the "promised" side of every value-gap analysis, and cross-checks it against the unfinished internal reality (the "TK" pricing placeholders, the two competing funnel scripts, the delivery-heavy scaling constraint). |
+| `source-material/inspired-cagan-summary.md` | Comprehensive summary of _Inspired_ (Marty Cagan) — the agent's philosophy & org-design foundation. |
+| `source-material/continuous-discovery-habits-torres-summary.md` | Comprehensive summary of _Continuous Discovery Habits_ (Teresa Torres) — the agent's discovery operating system. |
+| `source-material/product-led-growth-bush-summary.md` | Comprehensive summary of _Product-Led Growth_ (Wes Bush) — the agent's monetization & growth layer. |
+
+> **On the book summaries:** the doctrine is already baked into `kodara-cpo-system-prompt.md`, so you don't need to load these three files at runtime for the agent to behave correctly — they're kept in the repo as the canonical reference for *why* it reasons the way it does, and so the doctrine can be audited or updated over time. Load them into context only when you want the agent to cite chapter-level detail or you're revising the system prompt itself.
 
 ---
 
