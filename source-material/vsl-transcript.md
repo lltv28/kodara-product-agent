@@ -1,6 +1,6 @@
 # Kodara — VSL Transcript (Primary Source: Current Positioning & Offer)
 
-> **Status:** This is the authoritative statement of Kodara's *promised value*, positioning, offer structure, and guarantee **as currently marketed.** When the CPO agent reasons about what we've promised vs. what we deliver (value-gap analysis), this document is the source of truth for the "promised" side. Note: it still reflects the live offer at time of capture — pricing/guarantee specifics here are what the market is being told today, even where internal docs still carry "TK" placeholders.
+> **Status:** This is the authoritative statement of Kodara's *promised value*, positioning, offer structure, and guarantee **as currently marketed.** When the CPO agent reasons about what we've promised vs. what we deliver (value-gap analysis), this document is the source of truth for the "promised" side. Note: it reflects the live offer at time of capture — the pricing/guarantee specifics here are what the market is being told, and they match the locked internal offer.
 
 ---
 
@@ -198,7 +198,7 @@ The agent should treat the transcript above as the *promised value* and mine it 
 
 ### Promise-vs-reality gaps the CPO should keep flagging
 
-- **"Done-for-you, without lifting a finger" vs. the delivery-heavy scaling constraint.** The exact thing that sells is the exact thing that's hard to productize. This is the central Cagan "beware of specials" tension, stated in the marketing itself.
-- **Pricing certainty in the VSL vs. "TK" placeholders internally.** The market is being told concrete ranges/guarantees while internal product definition is still unsettled and two script versions exist (Sandra as £17→£6,000 vs. $7→$27/mo). The promise has outrun the productized reality.
-- **Ascension benchmarks (10–20% / 5–10%) presented as "typical"** rest on a small named client base (Sandra, Leanne; Scotty, John). The agent should treat these as hypotheses to validate, not established product metrics, and pair any push toward them with the trust guardrail (the whole model dies if conversion is juiced at the expense of the expert's reputation).
+- **"Turn strangers into high-paying clients" vs. the end-user experience.** Delivery itself is handled (engineers + VAs build all ~50 clients), so the real gap isn't "can we build it" — it's whether the AI chat is *delightful* enough that end-users enroll, stay, and ascend. The current end-user UX feels clunky next to ChatGPT and drives drop-off; closing that gap is the live product work.
+- **One offer, not two.** Each client runs one funnel — a low-ticket AI on-ramp that warms cold leads into the client's *existing* high-ticket (Sandra: £17 → £199/mo → £6,000). Don't treat the client's end-user prices as Kodara's pricing — Kodara charges its clients ~$2,500/mo.
+- **Ascension benchmarks (10–20% / 5–10%) presented as "typical"** should be treated as hypotheses to validate per client, not established product metrics — and any push toward them must be paired with the trust guardrail (the whole model dies if conversion is juiced at the expense of the expert's reputation).
 - **"$100M generated for clients"** is a prior-track-record/marketing claim, not Kodara product evidence — never to be cited as Kodara performance data.

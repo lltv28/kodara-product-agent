@@ -15,7 +15,7 @@ The agent synthesizes three books into one operating doctrine:
 | Path | What it is |
 |---|---|
 | `kodara-cpo-system-prompt.md` | The CPO agent's system prompt. Stable doctrine + grounded Kodara context. This is the file you load into the `system` field. |
-| `source-material/vsl-transcript.md` | The Video Sales Letter transcript — the **authoritative statement of Kodara's _promised_ value**. The agent uses this as the "promised" side of every value-gap analysis, and cross-checks it against the unfinished internal reality (the "TK" pricing placeholders, the two competing funnel scripts, the delivery-heavy scaling constraint). |
+| `source-material/vsl-transcript.md` | The Video Sales Letter transcript — the **authoritative statement of Kodara's _promised_ value**. The agent uses this as the "promised" side of every value-gap analysis, and cross-checks it against the *experienced* value — most concretely, the end-user chat that still feels clunky next to ChatGPT and drives drop-off. |
 | `source-material/inspired-cagan-summary.md` | Comprehensive summary of _Inspired_ (Marty Cagan) — the agent's philosophy & org-design foundation. |
 | `source-material/continuous-discovery-habits-torres-summary.md` | Comprehensive summary of _Continuous Discovery Habits_ (Teresa Torres) — the agent's discovery operating system. |
 | `source-material/product-led-growth-bush-summary.md` | Comprehensive summary of _Product-Led Growth_ (Wes Bush) — the agent's monetization & growth layer. |
@@ -28,14 +28,14 @@ The agent synthesizes three books into one operating doctrine:
 
 The agent was built around four deliberate choices (change these in the system prompt if your situation changes):
 
-- **Business type:** sales-led B2B SaaS, founder-led done-for-you delivery, pre-repeatable-PMF.
+- **Business type:** sales-led B2B SaaS, done-for-you delivery (built by engineers + VAs, not founder-bottlenecked), ~50 active clients, ~$1.5M ARR.
 - **Mode:** advisor **and** operator — it both challenges your thinking and produces deliverables.
 - **Posture:** direct & challenging — it disagrees openly, demands evidence, and names traps (specials, output theater, optimizing the wrong side of the product).
 - **Sharpest at:** discovery & roadmap + team/process/stakeholders. Pricing and PLG are present but secondary.
 
 The single idea that overrides everything: **fall in love with the outcome and the problem — never the solution, feature, or offer.**
 
-The central thing it keeps in front of you: Kodara is a **two-sided product** — the *expert buyer* (judges it on "does it sound like me / can I trust it") vs. the *consumer leads* the AI actually talks to (where conversion value is created). Most product mistakes here come from optimizing one side when the real lever is the other.
+The central thing it keeps in front of you: Kodara is a **two-sided product** — the *expert buyer* (judges it on "does it sound like me / can I trust it") and the *consumer leads* the AI actually talks to. The two reinforce in a chain: delight the end-user → they enroll and ascend → the client makes money → the client stays → happy enrolled users make leaving costly (lock-in). The job is to find the move that advances that chain, while staying clear about which side any decision touches.
 
 ---
 
@@ -67,8 +67,9 @@ resp = client.messages.create(
     ],
     messages=[
         {"role": "user",
-         "content": "How do I productize delivery without weakening the VSL's "
-                    "'done-for-you, you don't lift a finger' promise?"}
+         "content": "Our end-user chat feels clunky next to ChatGPT and that's "
+                    "driving drop-off. How would you prioritize fixing it against "
+                    "our goal of improving client outcomes?"}
     ],
 )
 print(resp.content[0].text)
@@ -83,11 +84,12 @@ Notes:
 
 ## Maintaining it
 
-The system prompt is doctrine and rarely needs to change. The one block worth keeping current is **"What Kodara is"** in `kodara-cpo-system-prompt.md` — update it the moment you confirm:
+The system prompt is doctrine and rarely needs to change. The one block worth keeping current is **"What Kodara is"** in `kodara-cpo-system-prompt.md` (it carries a "context current as of" date stamp) — refresh it when these change:
 
-- Real **ARR and client count** (currently marked unverified — the agent is told to flag when advice depends on numbers it doesn't have).
-- Final **pricing and guarantee terms** (the "TK" placeholders).
-- Which **funnel script** is canonical (two competing versions currently exist).
+- **ARR and client count** (currently ~50 clients, ~$1.5M ARR).
+- **Kodara's pricing** (currently ~$2,500/mo retainer) and the guarantee terms.
+- The **default client model / canonical funnel** (currently: low-ticket AI → warm cold leads → client's existing high-ticket).
+- **Per-client metrics** once instrumented (enrollment, ascension, drop-off, churn) — still unverified today.
 - Any **product-org / roadmap-ownership** changes.
 
 When the VSL changes, replace `source-material/vsl-transcript.md` so the "promised value" reference stays accurate.
@@ -96,8 +98,8 @@ When the VSL changes, replace `source-material/vsl-transcript.md` so the "promis
 
 ## Suggested first prompts
 
-- "Draw the expert-side and consumer-side Opportunity Solution Trees for the 'productize delivery' outcome."
-- "Audit the consumer funnel for ability debt and value gaps against what the VSL promises."
+- "Draw the Opportunity Solution Tree for the 'improve client outcomes' outcome — end-user enrollment and ascension to the client's high-ticket."
+- "Audit the end-user chat for the ability debt and value gaps that make it feel clunky next to ChatGPT."
 - "Where is our current roadmap likely just sales requests in disguise? How would you fix the prioritization?"
-- "Propose a value metric and pricing structure to retire the 'TK' placeholders."
+- "What's the value metric and is there a case for moving Kodara off a flat retainer toward outcome-based pricing?"
 - "Design the weekly customer-contact cadence for both sides without overloading me as founder."
