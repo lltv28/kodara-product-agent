@@ -12,28 +12,44 @@
 
 **The one outcome we're anchoring June on:** **end-user retention / return** — framed as a *learning* goal (we've never measured it; Item Zero is what makes it measurable). The Opportunity Solution Tree maps every feature to the customer problem it's meant to serve.
 
-**Build order (dependencies):** Item Zero (instrumentation) first → **B.2** streaming → the shared engines (**B.5** component schema, **B.6** staging layer) → their callers (B.1, B.4). **B.8 Ascension** is top-tier and runs in parallel. **B.7** is folded into B.5/B.6 (no separate build).
+**Build order (dependencies):** Item Zero (instrumentation) first → **B.2** streaming → the shared engines (**B.5** component schema, **B.6** staging layer) → their callers (B.1, B.4). **B.8 Upsell** is top-tier and runs in parallel. **B.7** is folded into B.5/B.6 (no separate build).
 
 **Decided vs. open:**
-- *Decided:* the anchor outcome (retention/return); instrument before building; paywall-the-payoff for the quiz; ascension (B.8) is top-tier.
-- *Open — for the meeting:* whether to cut to a focused core vs. keep the full menu; standing up a product trio to own it; the ethical line for vulnerable verticals; outcome-based pricing. *(See "Doctrine flags," "What's still missing," and the consolidated "Open questions" at the bottom.)*
+- *Decided:* the anchor outcome (retention/return); instrument before building; upsell (B.8) is top-tier.
+- *Open — for the meeting:* whether to cut to a focused core vs. keep the full menu; standing up a product trio to own it; the ethical line for vulnerable verticals; outcome-based pricing; **the quiz paywall model — "paywall the payoff" vs. the free personalized-plan preview the funnel ships today (was "Decided"; reopened by the codebase review — see Codebase reality check + bottom decisions).** *(See "Doctrine flags," "What's still missing," and the consolidated "Open questions" at the bottom.)*
 
 **How to navigate (it's long):**
 - **Engineers** → Section A (instrumentation + the PH-1…PH-10 tickets + the event schema), **B.4 §3** (voice architecture), **B.5 §3** (component schema), and **"Open questions & data we need"** at the bottom.
 - **Designers** → the at-a-glance table, the **Opportunity Solution Tree**, and the experience layers (**B.1 §3, B.2, B.3, B.4 §1–2, B.5, B.6**).
 - **Everyone** → the at-a-glance table (one-screen overview) + the OST (why these features).
 
-**Honest caveat:** the opportunities in the tree are **hypotheses** — we have **no qualitative user data yet**, only the instrumentation coming online. We're going **data-first for June**; treat priorities as provisional until Item Zero's drop-off data lands. (A reasonable challenge from the room: "have we talked to any end-users?" — the honest answer is not yet.)
+**Honest caveat:** the opportunities in the tree are **hypotheses** — we have **limited fresh qualitative data** (behavioral instrumentation is still coming online), though `customer-research/end-customer-profile.md` plus 31 customer dossiers already capture a synthesized end-user/buyer picture to start from rather than from zero. We're going **data-first for June**; treat priorities as provisional until Item Zero's drop-off data lands. (A reasonable challenge from the room: "have we done fresh end-user interviews?" — not yet; but start from the existing end-customer profile, don't redo it.)
+
+---
+
+## Codebase reality check (verified against `the-kodara/kodara`, 2026-06-02)
+
+This roadmap was first drafted **without** the codebase. Grounded in the actual product, several "build" items are really "extend/consolidate," and one "Decided" item conflicts with shipped behavior. Corrections, each tagged to its section:
+
+- **B.5 (Visual components):** the component **renderer + output schema already exist** — `apps/electron/src/components/chat/messageUiBlocks.ts` + `MessageUiBlocksView.tsx` render typed `ui_blocks` on assistant messages (today only `connector_action` / `facebook_latest_snapshot`, i.e. owner-side). A ResultCard / 2×2 / Dossier is a **new block type in an existing union**, not a new framework.
+- **B.6 (Thinking / progress):** the two reference beats already exist — `apps/funnel/src/components/runtime/PersonalizedAck.tsx` (the quiz "analysing…" → typewriter reveal, incl. a 4s thinking delay) and `apps/electron/src/components/chat/WLThinkingIndicator.tsx` ("{Agent} is thinking…"). B.6 = **consolidate these into one staging layer**, not build from scratch.
+- **B.3 (Reply pacing):** no length/mode logic exists, **but a per-agent reply rubric does** (`apps/api/src/prompts/agent_reply/reply-rubric.mustache`, `rubric.segments.ts`, `RubricEditorPanel`, incremental rubric generation). That rubric is already the "sounds like me" mechanism — **mode-matching should extend the rubric**, and the feared "50-config per-client voice calibration" is already solved.
+- **Channels (Section A scope):** the "web/app is the only surface; no cross-channel identity problem" assumption is **outdated** — **email is live** (`lead_nurture` sequences via Postmark) and **SMS is in progress** (`twilio-10dlc-registration-info.md`). Identity already keys to email/phone, so multi-channel attribution is **partly in scope now**, not "additive later." *(Also corrected inline in §A.1.)*
+- **Qualitative data:** softened above — `customer-research/end-customer-profile.md` + 31 dossiers already exist; start there.
+- **Avatar (B.1 backlog):** "reuses avatar infra" is real, not hypothetical — a full talking-head pipeline exists (`createTalkingHeadVideo` Temporal workflow, `talkingHead` routes, `speaking-head-videos` UI, agent `avatar_url`).
+
+**Open question for the team (was "Decided" — now reopened):**
+- **B.1 quiz paywall model.** The roadmap proposes **"paywall the payoff"** (tease only; never compute/show the answer before the gate). But the **live funnel does the opposite** — `docs/product-specs/lead-quiz-paywall-and-invite.md` (LQ4) shows **a free personalized plan preview at the paywall, built from the quiz answers**, and `PersonalizedAck.tsx` already reflects answers back pre-payment. So "paywall the payoff" is a **reversal of shipped behavior, not a new build.** **What do we think is best:** keep the current free-preview model, switch to paywall-the-payoff, or a middle path (tease the *structure*, reveal the *substance* only post-pay)? Trade-off = conversion lift vs. trust/refund risk — decide before any B.1 work starts.
 
 ---
 
 ## Strategy context (why this roadmap exists)
 
-**The #1 outcome is improving client outcomes** — how much money each client makes from their AI product (high-ticket revenue is where it's made) and how many end-users they enroll and ascend into it.
+**The #1 outcome is improving client outcomes** — how much money each client makes from their AI product (high-ticket revenue is where it's made) and how many end-users they enroll and upsell into it.
 
 The mechanism is a reinforcing chain, not a trade-off between "sides":
 
-> **Delight the end-user → they enroll and ascend → the client makes high-ticket money → the client stays → the client's now-happy enrolled users make leaving costly (they'd lose the product) → lock-in.**
+> **Delight the end-user → they enroll and get upsold → the client makes high-ticket money → the client stays → the client's now-happy enrolled users make leaving costly (they'd lose the product) → lock-in.**
 
 The validated, evidence-backed consumer-side problem: **the end-user chat experience feels clunky and confusing next to ChatGPT** — the top driver of end-user drop-off and complaints, and not yet something users find fun to return to. That is the first link in the chain, which is why the June work is aimed there.
 
@@ -48,18 +64,18 @@ The validated, evidence-backed consumer-side problem: **the end-user chat experi
 | **0** | **Funnel instrumentation (PostHog) — Item Zero** | **Finalized — build first** | Makes all 5 funnel numbers readable per client | Dashboard shows the drop-off point from ≥3 pilot clients |
 | **B.1** | **Quiz v2** (the conversion engine) | Ideas for design/CTO review — see §B.1 | Enrollment (cold lead → $17) | Higher cold-lead → $17 purchase rate, without eroding post-purchase trust |
 | B.2 | Speed & responsiveness | Ideas — see §B.2 | End-user retention + enrollment (closes the ChatGPT-feel gap) | "Never feels like a wait" — instant ack + streaming; drop-off down during waits |
-| B.3 | Reply length & pacing | Ideas — see §B.3 | Retention (turn-to-turn continuation) + ascension | Mode-matched replies beat both current *and* a naive cap on continuation + ascension |
-| B.4 | Voice — make it feel "live" (phone-call) | Ideas — see §B.4 | Retention/return + differentiation (a live call in the expert's *own* voice) | Caller return + ascension vs. text; time-to-first-audio <1s feels like a real call |
-| B.5 | Visual chat components | Ideas — see §B.5 | Enrollment (teaser) + comprehension/ascension (paid) | One component, two states: locked tease lifts buy; full card lifts action |
+| B.3 | Reply length & pacing | Ideas — see §B.3 | Retention (turn-to-turn continuation) + upsell | Mode-matched replies beat both current *and* a naive cap on continuation + upsell |
+| B.4 | Voice — make it feel "live" (phone-call) | Ideas — see §B.4 | Retention/return + differentiation (a live call in the expert's *own* voice) | Caller return + upsell vs. text; time-to-first-audio <1s feels like a real call |
+| B.5 | Visual chat components | Ideas — see §B.5 | Enrollment (teaser) + comprehension/upsell (paid) | One component, two states: locked tease lifts buy; full card lifts action |
 | B.6 | Thinking / progress display | Ideas — see §B.6 | Perceived value + anticipation at payoff moments | Dramatized build at plan/verdict gen lifts stay-through; suppressed on short turns |
 | B.7 | Animation / motion | **Folded into B.5/B.6 — not a standalone feature; cut welcome animation** | — (motion serves its host feature) | No "animation" metric; guardrail = must not regress time-to-first-value |
-| **B.8** | **Ascension / mid-ticket hand-off** | **Ideas — see §B.8 (top-tier)** | **Ascension — where the client's money is made** | Mid-ticket sub + high-ticket intent→confirmed rise per client |
+| **B.8** | **Upsell / mid-ticket hand-off** | **Ideas — see §B.8 (top-tier)** | **Upsell — where the client's money is made** | Mid-ticket sub + high-ticket intent→confirmed rise per client |
 
 Sequencing rationale: instrumentation makes everything gradable → Speed is the safest, highest-certainty win → cheap A/B-able items → heavier bets tested cheaply before funding.
 
 **Anchor outcome for June (learning-framed):** end-user **retention / return** — *"discover what drives an end-user to come back."* The Opportunity Solution Tree (below, before Section B) hangs every feature off this. Framed as a *learning* goal until Item Zero makes it measurable.
 
-**Cross-feature build order (the real dependencies — several items each say "ship first"):** Item Zero first (makes everything gradable) → **B.2 streaming** (the floor B.3/B.6 are perceived through, so it precedes them) → the shared engines (**B.5 ResultCard + output schema**, **B.6 staging engine**) before their callers (B.1's experience layer, B.4's fillers) → **B.8 Ascension** is top-tier and independent of the chat-feel work, so it can run in parallel. **B.7 is folded** (no separate build). Once Item Zero's drop-off data lands, concentrate on the *one* opportunity with the biggest leak rather than advancing every branch at once.
+**Cross-feature build order (the real dependencies — several items each say "ship first"):** Item Zero first (makes everything gradable) → **B.2 streaming** (the floor B.3/B.6 are perceived through, so it precedes them) → the shared engines (**B.5 ResultCard + output schema**, **B.6 staging engine**) before their callers (B.1's experience layer, B.4's fillers) → **B.8 Upsell** is top-tier and independent of the chat-feel work, so it can run in parallel. **B.7 is folded** (no separate build). Once Item Zero's drop-off data lands, concentrate on the *one* opportunity with the biggest leak rather than advancing every branch at once.
 
 ---
 
@@ -67,14 +83,14 @@ Sequencing rationale: instrumentation makes everything gradable → Speed is the
 
 **Goal:** Per client, read the 5 numbers we can't see today:
 1. **Enrollment** — cold leads who land → buy the low-ticket entry product.
-2. **Mid-ticket ascension** — low-ticket buyers → mid-ticket monthly sub.
-3. **High-ticket ascension** — leads → the client's existing high-ticket (intent today; confirmed once integrated — see §A.6).
+2. **Mid-ticket upsell** — low-ticket buyers → mid-ticket monthly sub.
+3. **High-ticket upsell** — leads → the client's existing high-ticket (intent today; confirmed once integrated — see §A.6).
 4. **Drop-off map** — the exact step where most leads disappear.
 5. **End-user return/retention** — do buyers come back inside the 24–48h window and beyond.
 
-**Reframe to hold onto:** "Implement PostHog" is an output. The outcome is *"we can see, per client, where end-users leak — and grade whether a change fixed it."* If we auto-capture everything, we get a pile of pageview data and still can't answer "what's Sandra's £17→£199 ascension rate." The value is the **event taxonomy mapped to our funnel**, not the tool.
+**Reframe to hold onto:** "Implement PostHog" is an output. The outcome is *"we can see, per client, where end-users leak — and grade whether a change fixed it."* If we auto-capture everything, we get a pile of pageview data and still can't answer "what's Sandra's £17→£199 upsell rate." The value is the **event taxonomy mapped to our funnel**, not the tool.
 
-**Scope simplifier:** web/app is the only surface today (no WhatsApp/SMS/email live yet), so there is **no cross-channel identity stitching problem** in June. Identity keys directly to email/phone. Multi-channel is additive later.
+**Scope simplifier (corrected vs. codebase):** the chat product is web/app, but **email is already a live channel** (`lead_nurture` sequences via Postmark, `intake_submitted`→`payment_recorded`) and **SMS is in progress** (`twilio-10dlc-registration-info.md`). Identity already keys to email/phone, so there is **no hard identity-stitching blocker** — but multi-channel attribution (which channel drove the return/upsell) is **partly in scope now**, not purely additive later. WhatsApp remains future.
 
 ## A.1 — The funnel we're instrumenting (from our own VSL)
 
@@ -85,7 +101,7 @@ cold lead lands → diagnostic/quiz → diagnostic result shown
    → mid-ticket sub ($199–499/mo)  OR  high-ticket hand-off (client's external booking app)
 ```
 
-Two parallel ascension exits after low-ticket (mid-ticket sub *or* high-ticket) — model both, don't force a linear order.
+Two parallel upsell exits after low-ticket (mid-ticket sub *or* high-ticket) — model both, don't force a linear order.
 
 ## A.2 — Event spec table (implement line-by-line)
 
@@ -98,9 +114,9 @@ Naming: `noun_verb_pasttense`, snake_case. Events fire **server-side**.
 | 2 | `diagnostic_completed` | The quiz/diagnostic arc completes. **Under the paywall model (B.1) the quiz does not compute a real answer** — for quiz clients this marks "arc completed," not a real diagnosis; the real result is `paid_diagnostic_delivered` (post-paywall, #11). | `diagnostic_type: string` (quiz_v1/conversational), `personalized: bool` (false for the quiz), `turns_to_complete: int`, `time_to_complete_sec: float` | Drop-off |
 | 3 | `low_ticket_purchased` | Entry payment confirmed (own checkout success **or** client-Stripe webhook) | `amount: float`, `currency: string`, `offer_id: string`, `payment_source: string` (kodara_checkout/client_stripe), `time_since_landed_sec: float` | **Enrollment** |
 | 4 | `nurture_reengaged` | End-user returns/interacts ≥1h after `low_ticket_purchased` | `hours_since_purchase: float`, `session_id: string` | **Return/retention** |
-| 5 | `mid_ticket_subscribed` | Monthly sub starts (own checkout **or** client-Stripe `subscription.created`/first `invoice.paid`) | `amount: float`, `currency: string`, `payment_source: string`, `time_since_low_ticket_sec: float` | **Mid-ticket ascension** |
-| 6a | `high_ticket_offer_clicked` | AI surfaces the high-ticket offer **and** the lead clicks/redirects out to the client's external booking app | `route_type: string` (calendar/application), `destination_host: string`, `time_since_landed_sec: float` | High-ticket ascension — **intent proxy** |
-| 6b | `high_ticket_booking_confirmed` | A **confirmed** booking is received — only where the client has granted Calendly/GHL webhook access (PH-5b) or we own the widget (Phase 3) | `route_type: string`, `booking_source: string` (calendly_webhook/ghl_webhook/native_widget), `time_since_landed_sec: float` | High-ticket ascension — **confirmed** |
+| 5 | `mid_ticket_subscribed` | Monthly sub starts (own checkout **or** client-Stripe `subscription.created`/first `invoice.paid`) | `amount: float`, `currency: string`, `payment_source: string`, `time_since_low_ticket_sec: float` | **Mid-ticket upsell** |
+| 6a | `high_ticket_offer_clicked` | AI surfaces the high-ticket offer **and** the lead clicks/redirects out to the client's external booking app | `route_type: string` (calendar/application), `destination_host: string`, `time_since_landed_sec: float` | High-ticket upsell — **intent proxy** |
+| 6b | `high_ticket_booking_confirmed` | A **confirmed** booking is received — only where the client has granted Calendly/GHL webhook access (PH-5b) or we own the widget (Phase 3) | `route_type: string`, `booking_source: string` (calendly_webhook/ghl_webhook/native_widget), `time_since_landed_sec: float` | High-ticket upsell — **confirmed** |
 | 7 | `generation_latency` | Each AI response is generated and returned | `latency_ms: int`, `tokens_out: int`, `mode: string` (text/voice), `stage: string` (diagnostic/nurture/general), `reply_length_variant: string` (current/mode_matched/naive_cap/unset) | **Grades Speed + Reply-pacing A/B** |
 | 8 | `session_started` | A new end-user conversation session opens | `mode: string` (text/voice) | Return/retention (PostHog Retention insight) |
 | 9 | `quiz_step_completed` | Each quiz stage completes (per B.1 arc) | `step_index: int`, `step_id: string` | Per-stage quiz drop-off map |
@@ -109,7 +125,7 @@ Naming: `noun_verb_pasttense`, snake_case. Events fire **server-side**.
 
 **Idempotency requirement (most likely data-quality bug — call it out in tickets):** `low_ticket_purchased`, `mid_ticket_subscribed`, `high_ticket_booking_confirmed` must dedupe — pass a PostHog event `uuid` keyed to the transaction/booking ID, so a webhook retry or a double-fire (own checkout + Stripe webhook for the same sale) never double-counts.
 
-**Do not rely on auto-capture** for these — it won't know what a "diagnostic" or "ascension" is. Auto-capture stays on only for the web app to support session replay later (Phase 3), gated on PII rules.
+**Do not rely on auto-capture** for these — it won't know what a "diagnostic" or "upsell" is. Auto-capture stays on only for the web app to support session replay later (Phase 3), gated on PII rules.
 
 ## A.3 — PostHog setup
 
@@ -124,8 +140,8 @@ Naming: `noun_verb_pasttense`, snake_case. Events fire **server-side**.
 - **Hard rule:** no event may be emitted without `client_id` + `client` group. Server-side assertion rejects/logs violations (prevents cross-client contamination).
 
 **Feature flags:**
-- **Reply-pacing A/B (B.3):** flag `reply_length`, **three arms** — `current` / `mode_matched` / `naive_cap` (the `naive_cap` arm exists to *disprove* a global word cap; `mode_matched` is the recommended approach), sticky per `distinct_id`. Backend applies the variant **and stamps `reply_length_variant` on every `generation_latency` event** so the experiment self-joins. Goal metrics: reply-to-reply continuation + `low_ticket_purchased` + `mid_ticket_subscribed` (ascension) — **not** session length.
-- **Voice cohorting + rollout (B.4):** flag `voice_mode_enabled`, boolean — used to **cohort voice-callers vs. text users** (to measure return + ascension) and to **stage the rollout of the live phone-call experience.** *(Voice already exists — this is NOT a demand fake-door.)* Event `voice_input_used` (`{ duration_sec: float }`) reads voice usage and pairs against `nurture_reengaged`.
+- **Reply-pacing A/B (B.3):** flag `reply_length`, **three arms** — `current` / `mode_matched` / `naive_cap` (the `naive_cap` arm exists to *disprove* a global word cap; `mode_matched` is the recommended approach), sticky per `distinct_id`. Backend applies the variant **and stamps `reply_length_variant` on every `generation_latency` event** so the experiment self-joins. Goal metrics: reply-to-reply continuation + `low_ticket_purchased` + `mid_ticket_subscribed` (upsell) — **not** session length.
+- **Voice cohorting + rollout (B.4):** flag `voice_mode_enabled`, boolean — used to **cohort voice-callers vs. text users** (to measure return + upsell) and to **stage the rollout of the live phone-call experience.** *(Voice already exists — this is NOT a demand fake-door.)* Event `voice_input_used` (`{ duration_sec: float }`) reads voice usage and pairs against `nurture_reengaged`.
 
 ## A.4 — Day-one dashboard ("Client Funnel" — filter: `client` group + date range)
 
@@ -134,8 +150,8 @@ Naming: `noun_verb_pasttense`, snake_case. Events fire **server-side**.
 
 **Tiles:**
 1. **Enrollment rate** = `low_ticket_purchased / lead_landed` (trend).
-2. **Mid-ticket ascension** = `mid_ticket_subscribed / low_ticket_purchased`.
-3. **High-ticket ascension (two-state):**
+2. **Mid-ticket upsell** = `mid_ticket_subscribed / low_ticket_purchased`.
+3. **High-ticket upsell (two-state):**
    - Default (no integration): `high_ticket_offer_clicked / lead_landed` — labeled **"Intent — click-through, not confirmed"** with an "estimate" visual treatment.
    - Integrated clients: add `high_ticket_booking_confirmed / lead_landed` (confirmed) **and** `confirmed / clicked` (the correction ratio).
 4. **Return rate** = `nurture_reengaged / low_ticket_purchased`, bucketed by `hours_since_purchase`.
@@ -156,13 +172,13 @@ VSL benchmarks (10–20% mid / 5–10% high) appear as **reference annotation li
 8. **PH-7 — `generation_latency` (#7).** Done when: every AI response emits latency_ms/tokens_out/mode/stage; baseline median/p90 readable.
 9. **PH-8 — PII guard + verification.** Done when: automated check (or code-review sign-off) confirms no event property carries conversation/diagnostic free-text; PostHog PII scrubbing + input auto-capture-off confirmed.
 10. **PH-9 — Day-one dashboard (§A.4).** Done when: dashboard loads, filters by `client` group + date range, shows non-zero data from ≥3 pilot clients.
-11. **PH-10 — Feature flags (Phase 2, queue now).** Done when: `reply_length` three-arm (`current`/`mode_matched`/`naive_cap`) + `voice_mode_enabled` boolean exist, variant stamped on events, and PostHog Experiments configured with **continuation + ascension** goal metrics (not session length). *(The voice flag is for cohorting + staged rollout of the live phone-call experience — not a demand test.)*
+11. **PH-10 — Feature flags (Phase 2, queue now).** Done when: `reply_length` three-arm (`current`/`mode_matched`/`naive_cap`) + `voice_mode_enabled` boolean exist, variant stamped on events, and PostHog Experiments configured with **continuation + upsell** goal metrics (not session length). *(The voice flag is for cohorting + staged rollout of the live phone-call experience — not a demand test.)*
 
 **Pilot scope:** 3–5 clients across a spread of verticals, including ≥1 health/finance (exercises the PII path).
 
 ## A.6 — The high-ticket blind spot (read this before trusting the number)
 
-**Our single most important number — high-ticket ascension, where the client makes the money — is the one we can least trust today.** Everything upstream happens on our surface and is confirmed. The booking happens on the client's surface (Calendly / GHL / application form), so today we see **intent (a click-out), not confirmed bookings.**
+**Our single most important number — high-ticket upsell, where the client makes the money — is the one we can least trust today.** Everything upstream happens on our surface and is confirmed. The booking happens on the client's surface (Calendly / GHL / application form), so today we see **intent (a click-out), not confirmed bookings.**
 
 - High-ticket is already our smallest event (~5–10% of leads). The click-out → confirmed-booking conversion could plausibly be anywhere from ~20% to ~70% — **a range wider than the metric itself.** Today's intent number could overstate real bookings by **2–5×**. **Do not report it as revenue or let anyone target it.** Label it clearly on the dashboard.
 
@@ -181,18 +197,18 @@ VSL benchmarks (10–20% mid / 5–10% high) appear as **reference annotation li
 | **GHL auth** | Agency-level vs. location-level; clients are usually a sub-account | Use **location-level** OAuth/API key (agency-level pulls the wrong account → isolation risk). Workflow-webhook setup is manual per client unless scripted — document a checklist. Match by contact email. |
 | **Garbage-in taxonomy drift** | Engineers inventing ad-hoc event names | Lock the taxonomy in this doc; new events need product sign-off; police via PostHog Data Management. |
 
-**Trust guardrail (Wells Fargo lesson):** benchmark lines are reference, not KPIs anyone is incentivized to hit. The instant someone optimizes "ascension" by having the AI push harder, we risk eroding the expert's reputation — the thing the whole chain depends on. Plan to instrument trust erosion too (a future `complaint`/negative-sentiment event), not just conversion.
+**Trust guardrail (Wells Fargo lesson):** benchmark lines are reference, not KPIs anyone is incentivized to hit. The instant someone optimizes "upsell" by having the AI push harder, we risk eroding the expert's reputation — the thing the whole chain depends on. Plan to instrument trust erosion too (a future `complaint`/negative-sentiment event), not just conversion.
 
 **Ethical guardrail — vulnerable verticals (the front-page test).** Several mechanics in the roadmap are persuasion devices: the curiosity loop and tease (B.1), the dramatized "thinking" build (B.6). In emotional/vulnerable verticals (sobriety, finance, health), apply the **front-page test** — if a journalist described exactly how this beat works on someone struggling with addiction or debt, would it read as *helpful* or as *manufactured compulsion?* Same posture as the specificity gate: **stricter / more restrained by default in vulnerable verticals**, and the tease/loop must stay tethered to genuine value the product delivers, never engineered pressure on someone who can least afford it. This isn't only honesty (Rule B) — it's the harm question: are we building compulsion into an audience that's vulnerable to it?
 
 ## A.8 — Open questions / numbers still needed
 
 - **`diagnostic_completed` signal:** is there a clean "diagnosis reached" marker in the AI pipeline, or does the agent need to emit one? (If the latter, add a small ticket.)
-- **Per-client end-user volume (rough):** mid/high-ticket ascension are small-percentage events; low volume = noisy. Determines whether 3–5 pilot clients over ~2 weeks yields usable data.
+- **Per-client end-user volume (rough):** mid/high-ticket upsell are small-percentage events; low volume = noisy. Determines whether 3–5 pilot clients over ~2 weeks yields usable data.
 - **Stripe access model for client integrations:** Stripe Connect vs. per-client API keys/webhook secrets (changes PH-5 effort + security posture).
 - **GHL location-level auth** confirmed per client.
 - **Long-tail booking tools** beyond Calendly/GHL stay intent-only until handled.
-- **Value-metric / outcome-pricing question (forward-looking, not June).** Now that Item Zero makes *client outcomes* measurable, the standing question becomes answerable: Kodara charges a **flat retainer** while its value scales with client outcomes (enrolled/ascended users, client revenue) — the classic "value scales but price doesn't" gap. Once we can read per-client ascension, revisit whether the retainer should evolve toward an **outcome-based value metric.** One-way door on pricing — deliberate, later, but the data this roadmap builds is the prerequisite, so flag it now.
+- **Value-metric / outcome-pricing question (forward-looking, not June).** Now that Item Zero makes *client outcomes* measurable, the standing question becomes answerable: Kodara charges a **flat retainer** while its value scales with client outcomes (enrolled/upsold users, client revenue) — the classic "value scales but price doesn't" gap. Once we can read per-client upsell, revisit whether the retainer should evolve toward an **outcome-based value metric.** One-way door on pricing — deliberate, later, but the data this roadmap builds is the prerequisite, so flag it now.
 
 **Next action:** eng lead confirms the `diagnostic_completed` signal source, then runs PH-1 → PH-9 (+ PH-5b for a Calendly and a GHL client) against 3–5 pilot clients. **Target: first real drop-off number on the dashboard within ~2 weeks.**
 
@@ -228,7 +244,7 @@ OUTCOME (root): End-user retention / return
   │
   ├─ OPPORTUNITY 3 — "I forget it exists / nothing pulls me back."
   │     (the 24–48h window and beyond — re-engagement)
-  │     └─ Served by: B.8 Ascension hand-off (primary, NEW) ·
+  │     └─ Served by: B.8 Upsell hand-off (primary, NEW) ·
   │                    B.4 Voice (nurture-window check-in hypothesis)
   │
   ├─ OPPORTUNITY 4 — "It doesn't feel like it's really *mine* / really *them*."
@@ -238,7 +254,7 @@ OUTCOME (root): End-user retention / return
   │
   ├─ OPPORTUNITY 5 — "I got value once but don't know why I'd come back."
   │     (no reason-to-return after the first win)
-  │     └─ Served by: B.8 Ascension hand-off · B.5 Plan/checklist
+  │     └─ Served by: B.8 Upsell hand-off · B.5 Plan/checklist
   │                    (a reason to return)
   │
   └─ OPPORTUNITY 6 (BUYER-SIDE) — "Can I trust this AI with my reputation?"
@@ -249,7 +265,7 @@ OUTCOME (root): End-user retention / return
 ## What the tree exposes
 - **Opportunity 2 (clunky-vs-ChatGPT) is the most crowded** — three features (B.2/B.3/B.6) point at it. Defensible (it's the one opportunity we have *evidence* for), but it means a large share of June's effort rides on one opportunity.
 - **B.7 (Animation) serves no opportunity on its own** — consistent with its verdict (folded into B.5/B.6). The tree confirms it isn't a branch.
-- **Opportunities 3 and 5 (re-engagement + reason-to-return) were under-served** until B.8 (Ascension) — and these are the branches *closest to the retention outcome itself.* The retention root is served more by re-engagement (Opp 3/5) than by first-impression polish (Opp 2), which argues for B.8's priority.
+- **Opportunities 3 and 5 (re-engagement + reason-to-return) were under-served** until B.8 (Upsell) — and these are the branches *closest to the retention outcome itself.* The retention root is served more by re-engagement (Opp 3/5) than by first-impression polish (Opp 2), which argues for B.8's priority.
 - **Opportunity 6 (expert trust) is a near-empty branch** — every consumer feature has a home; the side that *pays us and can churn* maps to one barely-served branch (see the expert-trust item under "What's still missing").
 - **The honest gap:** we don't yet know the *relative size* of these opportunities (which leak loses the most end-users). That's exactly what Item Zero's drop-off map answers — so **re-prioritize this tree once the funnel data lands**, comparing opportunities by where the bleed actually is, not by where we happen to have features.
 
@@ -261,7 +277,7 @@ OUTCOME (root): End-user retention / return
 
 > These were reviewed against the strategy. The notes below capture the current product judgment and the open work. **Each feature needs a defined outcome metric (readable once Item Zero ships) before it's committed.** Recurring flag: the original "Quality of Life Updates" framing is output language — several items were solutions with an outcome reverse-engineered; we are re-tethering each to one measurable outcome.
 >
-> **Test all four product risks, not just desirability.** Most A/Bs below test *desirability* (does it lift buy/return/ascension). Before committing engineering, each feature should also have a view on **usability** (can end-users figure it out unaided? — the clunky-vs-ChatGPT problem *is* a usability problem), **feasibility** (can we build it — e.g. can the brain emit the schema / stream tokens?), and **viability** (does it work for our business — e.g. Voice's cost-per-call, §B.4.7.5). A feature can lift a conversion metric while being confusing, unbuildable at quality, or uneconomic.
+> **Test all four product risks, not just desirability.** Most A/Bs below test *desirability* (does it lift buy/return/upsell). Before committing engineering, each feature should also have a view on **usability** (can end-users figure it out unaided? — the clunky-vs-ChatGPT problem *is* a usability problem), **feasibility** (can we build it — e.g. can the brain emit the schema / stream tokens?), and **viability** (does it work for our business — e.g. Voice's cost-per-call, §B.4.7.5). A feature can lift a conversion metric while being confusing, unbuildable at quality, or uneconomic.
 
 ### B.1 — Quiz v2: The Kodara Client Quiz — Ideas for Design + CTO Review
 
@@ -278,7 +294,7 @@ Build the quiz as a **reusable engine** — one shared template our team configu
 
 Why: it turns quiz creation from bespoke work into configuration — every client gets a proven, trust-safe quiz faster, and an improvement to the engine lifts all of them at once.
 
-> **Model-fit question (name it):** is the $17 entry a **tripwire** (self-liquidates the client's ad spend, per the VSL), a **paid trial** of the AI, or **the product**? These imply different post-purchase jobs (a tripwire must hand off hard to ascension; a trial must convert; a product must retain on its own). The paywall model assumes "tripwire → ascension" — worth confirming that's the intended frame, because it sets what B.8 must do.
+> **Model-fit question (name it):** is the $17 entry a **tripwire** (self-liquidates the client's ad spend, per the VSL), a **paid trial** of the AI, or **the product**? These imply different post-purchase jobs (a tripwire must hand off hard to upsell; a trial must convert; a product must retain on its own). The paywall model assumes "tripwire → upsell" — worth confirming that's the intended frame, because it sets what B.8 must do.
 
 #### 2. Proposed standard stage arc
 Every client quiz would be built from these stages, in order. The **arc stays standard**; each stage is a slot **our team tailors per client/vertical**. *(optional)* = stage may be omitted per vertical.
@@ -515,7 +531,7 @@ When a turn *needs* length, deliver it as back-and-forth, not a wall:
 Shortening the high-frequency Acknowledge/Probe turns cuts latency on exactly the turns that happen most — so this is partly a speed feature. But length and speed are confounded (shorter *looks* like a speed win and vice versa), and **streaming changes how length is even perceived** — a long reply that *streams* reads fine; a long reply that lands as a buffered wall feels clunky. So **sequence streaming first, then measure whether length still needs tightening**, so we don't over-cut to solve a problem streaming already fixed. *Test:* factorial A/B — streaming × mode-matching — to separate "clunky because slow" from "clunky because long."
 
 #### 4. Guardrail — length is part of the expert's voice
-Shortening must not truncate the AI out of **(a) the expert's voice** or **(b) the substance that makes the diagnostic valuable.** Two failure modes: **voice-flattening** (some experts are expansive — a cap files off their cadence and they hear "that doesn't sound like me," the buyer-side trust failure we can't afford) and **substance-gutting** (cap the real reframe to 50 words and we've shipped a fast generic bot). The honest line: **short where length adds nothing (chatter); full where length *is* the value (the insight).** The test of a good cut is "did we remove filler," not "did we hit a word count." Guardrail check belongs in the §6 expert "sounds like me" review + the ascension metric. (The B.1 §8 QA gate covers quiz-*launch* copy, not runtime chat voice — so the "sounds like me" check is the right home for this.)
+Shortening must not truncate the AI out of **(a) the expert's voice** or **(b) the substance that makes the diagnostic valuable.** Two failure modes: **voice-flattening** (some experts are expansive — a cap files off their cadence and they hear "that doesn't sound like me," the buyer-side trust failure we can't afford) and **substance-gutting** (cap the real reframe to 50 words and we've shipped a fast generic bot). The honest line: **short where length adds nothing (chatter); full where length *is* the value (the insight).** The test of a good cut is "did we remove filler," not "did we hit a word count." Guardrail check belongs in the §6 expert "sounds like me" review + the upsell metric. (The B.1 §8 QA gate covers quiz-*launch* copy, not runtime chat voice — so the "sounds like me" check is the right home for this.)
 
 #### 5. How to control it — universal vs. per-client
 - **Universal (platform):** the **mode-matching logic + length registers** live in the core response policy all clients inherit (the bulk of the feature; ships once). One-question + chunk-and-check are universal behaviors.
@@ -525,14 +541,14 @@ Shortening must not truncate the AI out of **(a) the expert's voice** or **(b) t
 - **Resist:** a per-client free-text "make replies this long" knob → 50 divergent configs and bespoke drift. Keep control to *universal logic + bounded dials.*
 
 #### 6. Measure it right
-**Primary: reply-to-reply continuation + ascension**, cohorted by the `reply_length` flag (arms: `current` / `mode_matched` / optionally `naive_cap`): continuation = did the user send another message (turn-to-turn survival); ascension = `mid_ticket_subscribed` + `high_ticket_offer_clicked`. **NOT "did replies get shorter"** — that measures the lever, not the outcome (we could shorten everything and tank ascension by gutting the diagnostic, and "got shorter" would call it a win). **Guardrail metric:** a "sounds like me" qualitative expert review on a sample, to catch voice-flattening before it becomes buyer churn.
+**Primary: reply-to-reply continuation + upsell**, cohorted by the `reply_length` flag (arms: `current` / `mode_matched` / optionally `naive_cap`): continuation = did the user send another message (turn-to-turn survival); upsell = `mid_ticket_subscribed` + `high_ticket_offer_clicked`. **NOT "did replies get shorter"** — that measures the lever, not the outcome (we could shorten everything and tank upsell by gutting the diagnostic, and "got shorter" would call it a win). **Guardrail metric:** a "sounds like me" qualitative expert review on a sample, to catch voice-flattening before it becomes buyer churn.
 
 #### 7. Prioritization + first move
 - **Tier 1 (cheap, high-leverage):** (1) mode-matching response policy (default-short, earn-length) — largely a prompt/policy change, low effort/high impact, replaces the word cap; (2) one-question-at-a-time; (3) A/B jointly with streaming (B.2).
 - **Tier 2:** (4) chunk-and-check on Teach moments (ties to B.1); (5) voice-mode tighter register (B.4 dependency).
 - **Tier 3 (data-gated):** (6) per-vertical bias + per-client voice calibration — add only where the A/B shows a vertical/expert systematically mismatched; don't pre-build 50 configs.
 
-**Cheapest first move:** write the mode-matching policy and run a **three-arm A/B — current / mode-matched / naive-50-word-cap — jointly with streaming**, via the `reply_length` flag. Grade on **continuation + ascension**, never word count. Hypothesis: mode-matched beats both — fixes clunky where current fails *and* keeps the depth the naive cap destroys. The naive-cap arm exists to **kill the roadmap's "50–75 word max" instinct with data, not opinion.**
+**Cheapest first move:** write the mode-matching policy and run a **three-arm A/B — current / mode-matched / naive-50-word-cap — jointly with streaming**, via the `reply_length` flag. Grade on **continuation + upsell**, never word count. Hypothesis: mode-matched beats both — fixes clunky where current fails *and* keeps the depth the naive cap destroys. The naive-cap arm exists to **kill the roadmap's "50–75 word max" instinct with data, not opinion.**
 
 **Numbers we'd want (don't have):** actual end-user complaints behind "walls of text" (are they objecting to *length* or to length *in the wrong moments*? — 10 real complaints could collapse this to "just fix the Probe/Acknowledge turns"); current avg reply length by conversational moment (do we even have a length problem at Teach moments, or only in chatter?); whether streaming (B.2) ships before or after this (changes whether we measure length pre- or post-streaming); per-expert voice profiles (enough content to calibrate register without flattening?).
 
@@ -582,10 +598,10 @@ Design it as **a call, not a chat with a mic:**
 **Make-or-break: time-to-first-audio < 1s p90.** Instrument it via `generation_latency` with `mode=voice` (the heaviest latency path). CTO: tighten/loosen against what ElevenLabs streaming + our brain can actually hit.
 
 #### 5. Measure it right
-**Primary: return + ascension of voice-callers vs. text users** (cohort by `voice_mode_enabled`): `nurture_reengaged` in the 24–48h window; `mid_ticket_subscribed` + `high_ticket_offer_clicked`, voice vs. text. **NOT call length / duration / turn count** — duration rises when transcription/latency *fails* (they keep repeating themselves). **Liveness-quality leading indicators** (diagnostic, not success): time-to-first-audio (the §4 budget), barge-in rate, VAD mis-fire rate, call-completion-vs-abandon — these say if the *call feel* works; return/ascension say if it *mattered*.
+**Primary: return + upsell of voice-callers vs. text users** (cohort by `voice_mode_enabled`): `nurture_reengaged` in the 24–48h window; `mid_ticket_subscribed` + `high_ticket_offer_clicked`, voice vs. text. **NOT call length / duration / turn count** — duration rises when transcription/latency *fails* (they keep repeating themselves). **Liveness-quality leading indicators** (diagnostic, not success): time-to-first-audio (the §4 budget), barge-in rate, VAD mis-fire rate, call-completion-vs-abandon — these say if the *call feel* works; return/upsell say if it *mattered*.
 
 #### 6. Where it helps most + per-client config
-**Where (hypotheses, ranked):** (1) **emotional verticals (sobriety, weight-loss) in the nurture-window check-in** — "Hey, it's Sarah — how'd today go?" as an actual *call* in her voice is parasocial warmth no text bot or ChatGPT can touch; nurture is where return/ascension is won — *strongest hypothesis*; (2) the diagnostic moment (deepens the "real conversation" differentiator, but most latency/quality-sensitive — prove the call feel in nurture first); (3) skip transactional moments (quiz, plan-gen).
+**Where (hypotheses, ranked):** (1) **emotional verticals (sobriety, weight-loss) in the nurture-window check-in** — "Hey, it's Sarah — how'd today go?" as an actual *call* in her voice is parasocial warmth no text bot or ChatGPT can touch; nurture is where return/upsell is won — *strongest hypothesis*; (2) the diagnostic moment (deepens the "real conversation" differentiator, but most latency/quality-sensitive — prove the call feel in nurture first); (3) skip transactional moments (quiz, plan-gen).
 **Per-client config:** voice-call is **per-client opt-in** (it's the expert's voice/reputation) — platform builds the one capability; client + us decide on/off + boundary. Everything underneath (streaming chain, VAD, barge-in, TTS) is universal platform.
 
 #### 7. Reputation guardrail (still load-bearing — folded in)
@@ -604,9 +620,9 @@ Voice is the heaviest build *and* the only feature with a real per-use cost: str
 - **Tier 3 — latency tuning (gate on Speed `mode=voice` data):** (6) pre-warm + speculative start.
 - **Parallel / gating (not a tier):** CTO architecture spike (Option A vs. B) — run alongside Tier 1, it decides *how* we build 1–5; founder + security ratify the content-boundary guardrail survives the chosen architecture before broad ship.
 
-**Cheapest first move:** CTO spikes the **streaming brain→ElevenLabs-TTS chain** and measures **time-to-first-audio against the <1s target**, *and* spikes whether our brain plugs into ElevenLabs' conversational layer (Option B) cleanly with the guardrail intact. That one spike decides the architecture and whether the "live" bar is reachable — which gates the whole build order. Grade the shipped feature on **caller return + ascension vs. text**, never on call length.
+**Cheapest first move:** CTO spikes the **streaming brain→ElevenLabs-TTS chain** and measures **time-to-first-audio against the <1s target**, *and* spikes whether our brain plugs into ElevenLabs' conversational layer (Option B) cleanly with the guardrail intact. That one spike decides the architecture and whether the "live" bar is reachable — which gates the whole build order. Grade the shipped feature on **caller return + upsell vs. text**, never on call length.
 
-**Numbers we'd want (don't have):** our current voice turn-around today (user-stops → first-audio — the baseline for §4); ElevenLabs' current streaming-TTS latency + whether their Conversational-AI layer accepts our brain as a custom LLM (the Option B viability check); **whether our brain already streams tokens** (if it returns complete replies, that's the first thing to change — shared with the Speed work); which clients are regulated (the off-by-default list); voice-caller baseline return/ascension (needs instrumentation live).
+**Numbers we'd want (don't have):** our current voice turn-around today (user-stops → first-audio — the baseline for §4); ElevenLabs' current streaming-TTS latency + whether their Conversational-AI layer accepts our brain as a custom LLM (the Option B viability check); **whether our brain already streams tokens** (if it returns complete replies, that's the first thing to change — shared with the Speed work); which clients are regulated (the off-by-default list); voice-caller baseline return/upsell (needs instrumentation live).
 
 ### B.5 — Visual Chat Components — Ideas for Design + CTO Review
 
@@ -638,15 +654,15 @@ Voice is the heaviest build *and* the only feature with a real per-use cost: str
 
 #### 5. Measure it right (two sides, two metrics — don't collapse them)
 - **Teaser visual (pre-paywall) → measure CONVERSION:** via `diagnostic_result_shown.result_component` (`locked_card` / `dossier` / `text`), does a teased structured result lift **offer click-through + `low_ticket_purchased`** vs. a text tease? *Hypothesis: the locked structured result out-converts a text tease — seeing the shape of a withheld answer is a stronger loop.*
-- **Paid visual (post-paywall) → measure COMPREHENSION/ACTION/ASCENSION:** `result_component=full_card` vs. `text` → **return (`nurture_reengaged`), plan-task completion, ascension** (`mid_ticket_subscribed`, `high_ticket_offer_clicked`). *Hypothesis: structured delivery → better comprehension → more action → more return/ascension.*
-- **NOT the metric:** "component renders" / "looks premium" (output theater). Grade teaser on the buy, paid on action/ascension. *(The hook — `diagnostic_result_shown.result_component` — is already specced in Section A; just populate it accurately on both sides.)*
+- **Paid visual (post-paywall) → measure COMPREHENSION/ACTION/UPSELL:** `result_component=full_card` vs. `text` → **return (`nurture_reengaged`), plan-task completion, upsell** (`mid_ticket_subscribed`, `high_ticket_offer_clicked`). *Hypothesis: structured delivery → better comprehension → more action → more return/upsell.*
+- **NOT the metric:** "component renders" / "looks premium" (output theater). Grade teaser on the buy, paid on action/upsell. *(The hook — `diagnostic_result_shown.result_component` — is already specced in Section A; just populate it accurately on both sides.)*
 
 #### 6. Prioritization + first move
 - **Tier 1 — build first:** (1) **ResultCard/2×2 renderer with two-state (locked/full) + the output schema** — the keystone (conversion teaser *and* paid payoff *and* B.3 Verdict target, in one); (2) **wire it to B.1 (teaser placement) and B.3 (Verdict mode emits it)** — cheap once the renderer + schema exist, makes the three features cohere.
 - **Tier 2:** (3) **Make the existing Plan/Checklist sendable by the AI in chat** (interactive, optimistic-UI per B.2) — strongest retention component, narrower placement. (Build is the *send-in-chat* capability, not the checklist itself — that exists.)
 - **Tier 3 — only if data demands:** (4) Dossier as a richer teaser variant of the ResultCard (likely config, not new code); (5) any chart/graph — only when a vertical's real diagnostic proves the result-card insufficient *and* it's backed by real data (no decorative pseudo-data charts).
 
-**Cheapest first move:** build the **ResultCard renderer + output schema with a locked and a full state**, instantiate it across 2–3 verticals **from config alone** (proving universality — if a vertical can't be expressed in the schema, *that's* the evidence we need another renderer), and A/B **locked-card-tease vs. text-tease** on the conversion side. Grade the teaser on **buy**, the paid version on **action + ascension** — never on "it rendered."
+**Cheapest first move:** build the **ResultCard renderer + output schema with a locked and a full state**, instantiate it across 2–3 verticals **from config alone** (proving universality — if a vertical can't be expressed in the schema, *that's* the evidence we need another renderer), and A/B **locked-card-tease vs. text-tease** on the conversion side. Grade the teaser on **buy**, the paid version on **action + upsell** — never on "it rendered."
 
 **Numbers we'd want (don't have):** do the verticals' real diagnostics actually fit a 2×2 / four-cell structure (need ~3 real diagnostic outputs — if most are a single number or a list, the "2×2" framing is wrong); current text-delivery comprehension/action baseline (is walls-of-text *proven* to hurt post-paywall action, or assumed?); **can the paid AI reliably emit the structured schema** (CTO — if the brain can't produce clean structured output, the renderer starves); teaser A/B baseline (current quiz→purchase rate, from B.1 instrumentation).
 
@@ -690,14 +706,14 @@ Thinking/progress is a legitimate value device, use it for drama even where late
 - **Per-client:** the expert's voice in the beat copy; nothing bespoke.
 
 #### 7. Measure it right
-By use: **anticipation/value at paid payoff moments** → completion-through-the-wait (stay to the reveal vs. abandon) + **return + ascension**; **anticipation pre-paywall (quiz)** → the **buy** (part of the B.1 A/B); **transparency** → trust/satisfaction + ascension shown vs. hidden; **latency-cover** → abandonment during genuine waits vs. a static spinner. **NOT "looks cool/premium"** (the output-theater trap — ironic for a feature that *is* theater, but theater that doesn't move completion/conversion/ascension is just cost). **A/B every deployment** (on vs. off, dramatized vs. real) per moment. **Guardrail to instrument: abandonment-*during*-thinking** — if users bail mid-build, the drama's too long or the wait too real.
+By use: **anticipation/value at paid payoff moments** → completion-through-the-wait (stay to the reveal vs. abandon) + **return + upsell**; **anticipation pre-paywall (quiz)** → the **buy** (part of the B.1 A/B); **transparency** → trust/satisfaction + upsell shown vs. hidden; **latency-cover** → abandonment during genuine waits vs. a static spinner. **NOT "looks cool/premium"** (the output-theater trap — ironic for a feature that *is* theater, but theater that doesn't move completion/conversion/upsell is just cost). **A/B every deployment** (on vs. off, dramatized vs. real) per moment. **Guardrail to instrument: abandonment-*during*-thinking** — if users bail mid-build, the drama's too long or the wait too real.
 
 #### 8. Prioritization + first move
 - **Tier 1:** (1) **universal staging-layer engine + presets + moment-routing** (incl. the hard suppress-on-short-turns rule) — the reusable core B.1/B.4/B.6 all call; (2) **anticipation preset at paid-AI plan/verdict generation** — the highest-value moment, extends the proven quiz pattern to the paid payoff.
 - **Tier 2:** (3) **transparency preset for genuine multi-step reasoning** (real steps where they exist — best trust-per-effort); (4) **wire B.1 + B.4 to the shared engine** (consolidate the one-offs).
 - **Tier 3:** (5) **latency-cover preset** for first-turn/cold-start (gate on Speed `generation_latency` data — only where real waits remain); (6) **per-vertical beat copy + the specificity gate.**
 
-**Cheapest first move:** A/B the **anticipation preset at the paid AI's plan/verdict generation** — dramatized build vs. instant-snap — graded on **completion-through-the-wait + return + ascension**, with **abandonment-during-thinking** instrumented as the guardrail. Hypothesis: the dramatized build lifts perceived value + ascension at the payoff moments and is noise (or negative) on short turns — confirming "scale drama with output weight."
+**Cheapest first move:** A/B the **anticipation preset at the paid AI's plan/verdict generation** — dramatized build vs. instant-snap — graded on **completion-through-the-wait + return + upsell**, with **abandonment-during-thinking** instrumented as the guardrail. Hypothesis: the dramatized build lifts perceived value + upsell at the payoff moments and is noise (or negative) on short turns — confirming "scale drama with output weight."
 
 **Numbers we'd want (don't have):** abandonment-during-generation today at plan/verdict moments (is there a wait worth dramatizing, and are we losing people in it?); where genuine multi-step reasoning actually happens in the paid AI (how much *real* transparency is available vs. must be dramatized); **Lucas's decision on the specificity line** (generic-only everywhere vs. specifics-allowed in non-regulated — a brand/trust call); which clients are regulated (the specifics-off list).
 
@@ -717,7 +733,7 @@ By use: **anticipation/value at paid payoff moments** → completion-through-the
 | Onboarding welcome animation (app entry) | — | **Cut** (§3) |
 | First-impression / activation moment | Genuine remainder | Reframe as onboarding, not motion (§2b) |
 
-A feature whose substance has been distributed into two other features isn't a feature; it's a theme. The pieces that attach to outcomes already got attached (B.5's conversion/comprehension, B.6's stay-through/ascension); what remains is the part that was always just "feel."
+A feature whose substance has been distributed into two other features isn't a feature; it's a theme. The pieces that attach to outcomes already got attached (B.5's conversion/comprehension, B.6's stay-through/upsell); what remains is the part that was always just "feel."
 
 #### 2. The genuine remainder
 **(a) Baseline motion/transition system — hygiene, not a feature.** The app's general "feel alive" layer (page/state transitions, consistent easing, tasteful micro-interactions, the quiz's one-thumb haptics). It matters for the clunky-vs-ChatGPT feel — but ship it as a **design-system concern**: define a small **motion vocabulary once** (token set: durations/easings + 3–4 standard transition patterns) and have *every other feature* (Speed skeletons, B.5 components, quiz, voice UI) consume it as built. It **rides along; it isn't scheduled as its own eng block** competing with the outcome features. Small, designer-led, low eng cost, applied incrementally. Don't gold-plate.
@@ -733,8 +749,8 @@ A feature whose substance has been distributed into two other features isn't a f
 **Entirely universal** — motion vocabulary, transitions, reveal motion are platform/design-system, built once, all 50 inherit. **Nothing per-client; actively resist per-client motion customization** (bespoke drift for zero outcome gain). The expert's voice/avatar is the per-client expression; the motion language is universal house style. (Brand color/accent may theme per-client, but that's theming, not motion.)
 
 #### 5. Measure it right (be skeptical — most output-theater-prone)
-- **No "animation" metric.** Motion is measured *through its host feature* (B.5 reveal → conversion/comprehension; B.6 build → stay-through + ascension; onboarding motion → activation + time-to-first-value). If a motion change can't move one of those, it failed regardless of how it looks.
-- **The trap to name:** "feels premium" / "demo looks better" / "smoother" are **not** consumer outcomes. Premium-feel surveys are especially seductive and especially meaningless here. Grade on activation/return/ascension, never perceived premiumness.
+- **No "animation" metric.** Motion is measured *through its host feature* (B.5 reveal → conversion/comprehension; B.6 build → stay-through + upsell; onboarding motion → activation + time-to-first-value). If a motion change can't move one of those, it failed regardless of how it looks.
+- **The trap to name:** "feels premium" / "demo looks better" / "smoother" are **not** consumer outcomes. Premium-feel surveys are especially seductive and especially meaningless here. Grade on activation/return/upsell, never perceived premiumness.
 - **The one honest guardrail: motion must not *cost* speed.** A flourish adding 400ms between the user and their value is a *negative* that directly fights the Speed work (B.2). Instrument **time-to-interactive / time-to-first-value** and treat any motion that regresses it as a defect, not polish. (Motion is the one "improvement" that can make the product measurably *slower* while feeling fancier — gratuitous motion is more of the clunky disease, not the cure.)
 
 #### 6. What to actually do
@@ -743,33 +759,33 @@ A feature whose substance has been distributed into two other features isn't a f
 - **Tier 3 — fold into onboarding (not motion):** handle the first-impression as onboarding/activation, motion *reinforcing* the value arrival, measured on activation → first diagnostic.
 - **Off-roadmap:** demo-polish → reclassify to sales-enablement, owned by sales, measured on close rate.
 
-**Bottom line:** B.7 isn't a feature, it's a theme that's already been absorbed. The win is the roadmap capacity reclaimed for the features that move enrollment/ascension/return — plus a single guardrail (time-to-first-value) ensuring "polish" never makes the product slower. **Numbers we'd want:** current activation rate (entry → first diagnostic) + time-to-first-value (is there even a first-impression problem motion could help?); whether the demo's "premium feel" actually correlates with client close rate (a *sales* hypothesis, tested on close rate, that would justify funding demo-polish separately).
+**Bottom line:** B.7 isn't a feature, it's a theme that's already been absorbed. The win is the roadmap capacity reclaimed for the features that move enrollment/upsell/return — plus a single guardrail (time-to-first-value) ensuring "polish" never makes the product slower. **Numbers we'd want:** current activation rate (entry → first diagnostic) + time-to-first-value (is there even a first-impression problem motion could help?); whether the demo's "premium feel" actually correlates with client close rate (a *sales* hypothesis, tested on close rate, that would justify funding demo-polish separately).
 
-### B.8 — Ascension / Mid-Ticket Hand-Off — Ideas for Design + CTO Review
+### B.8 — Upsell / Mid-Ticket Hand-Off — Ideas for Design + CTO Review
 
 > **Status: ideas and recommendations for the designer + CTO to review, refine, drop, or add — not a locked spec.** Universal: the chat *product* all ~50 clients inherit; our team builds it.
 >
-> **Priority flag: this is proposed as a top-tier item — arguably above B.5/B.6/B.7.** The review found the roadmap improves the *top* of the funnel (engagement, speed, feel) but barely touches the *moment of monetization.* By lever order (retention → ascension → acquisition), and because this is **where the client's money is actually made** (the mid-ticket £199/mo sub and the existing high-ticket), the ascension hand-off has a strong claim to be built before more consumer-side polish.
+> **Priority flag: this is proposed as a top-tier item — arguably above B.5/B.6/B.7.** The review found the roadmap improves the *top* of the funnel (engagement, speed, feel) but barely touches the *upsell moment.* By lever order (retention → upsell → acquisition), and because this is **where the client's money is actually made** (the mid-ticket £199/mo sub and the existing high-ticket), the upsell hand-off has a strong claim to be built before more consumer-side polish.
 
-**Core recommendation:** **Design the 24–48h nurture window as a deliberate, trigger-based hand-off — quick-win → desired-outcome → upgrade — instead of leaving it as an instrumented-but-undesigned gap.** Today we *measure* re-engagement (`nurture_reengaged`) and the upgrades (`mid_ticket_subscribed`, `high_ticket_offer_clicked`), but no feature *moves* them. This item is the conversation that turns a one-time $17 buyer into a returning, ascending customer.
+**Core recommendation:** **Design the 24–48h nurture window as a deliberate, trigger-based hand-off — quick-win → desired-outcome → upsell — instead of leaving it as an instrumented-but-undesigned gap.** Today we *measure* re-engagement (`nurture_reengaged`) and the upsells (`mid_ticket_subscribed`, `high_ticket_offer_clicked`), but no feature *moves* them. This item is the conversation that turns a one-time $17 buyer into a returning, upsold customer.
 
-*Why:* the whole VSL model is "the ones who buy small become the ones who buy big." That ascension is the link the client's revenue, retention, and lock-in all depend on — and it's the link closest to June's retention outcome (a user being well nurtured *is* a user who returns). It's also the one place the roadmap currently has the most instrumentation and the least product.
+*Why:* the whole VSL model is "the ones who buy small become the ones who buy big." That upsell is the link the client's revenue, retention, and lock-in all depend on — and it's the link closest to June's retention outcome (a user being well nurtured *is* a user who returns). It's also the one place the roadmap currently has the most instrumentation and the least product.
 
 #### 1. The hand-off design (trigger-based, not time-based)
 Three tracks, entered by *what the user has done*, not what day it is:
 - **Track 1 — Signup → Quick Win.** The just-bought user's *first* post-purchase win (the paid AI delivers the real diagnostic/answer they were teased — ties to B.1's paywall payoff). **No selling here.** Get them to value first.
 - **Track 2 — Quick Win → Desired Outcome.** Nurture messages + usage nudges that move them from "I got my number" toward the fuller outcome (the plan, the next step). Still no hard sell. This is where `nurture_reengaged` should fire and where B.4's voice check-in ("Hey, it's Sarah — how'd today go?") is a strong hypothesis.
-- **Track 3 — Desired Outcome → Upgrade.** *Only now* the soft-pitch: the £199/mo mid-ticket sub for the not-yet-ready, or the high-ticket route (calendar/application) for the ready. Framed as the logical next step after value delivered, not a push.
+- **Track 3 — Desired Outcome → Upsell.** *Only now* the soft-pitch: the £199/mo mid-ticket sub for the not-yet-ready, or the high-ticket route (calendar/application) for the ready. Framed as the logical next step after value delivered, not a push.
 
 **Meet users where they are:** if a buyer hits their quick win in the first session, skip Track 1. If they're clearly ready, skip to Track 3. Don't pace the hand-off by a calendar the user doesn't share.
 
 #### 2. Tie to instrumentation (Section A)
 - **Track 2 effectiveness** → `nurture_reengaged / low_ticket_purchased`, bucketed by `hours_since_purchase` (the A.4 return tile).
-- **Mid-ticket ascension** → `mid_ticket_subscribed` (confirmed, own checkout / client-Stripe).
-- **High-ticket ascension** → `high_ticket_offer_clicked` (intent) and `high_ticket_booking_confirmed` where integrated — **honor the A.6 intent-vs-confirmed split:** grade Track 3's high-ticket performance on *intent* today, *confirmed* once PH-5b lands, and never report intent as revenue.
+- **Mid-ticket upsell** → `mid_ticket_subscribed` (confirmed, own checkout / client-Stripe).
+- **High-ticket upsell** → `high_ticket_offer_clicked` (intent) and `high_ticket_booking_confirmed` where integrated — **honor the A.6 intent-vs-confirmed split:** grade Track 3's high-ticket performance on *intent* today, *confirmed* once PH-5b lands, and never report intent as revenue.
 
 #### 3. Trust guardrail (Bush's "don't sell before you deliver value")
-The one hard line: **never pitch Track 3 before the user has actually reached value in Track 1/2.** Selling the upgrade to someone who hasn't yet had their quick win is the exact trust erosion that breaks the chain — worse in an emotional/vulnerable vertical. Pair the ascension metric with the guardrail metric (refund/complaint + post-pitch drop-off): *ascension up + trust down = we pitched too early*, back it off. Same Wells-Fargo guardrail the rest of the doc carries, applied to the monetization moment where the temptation to push is highest.
+The one hard line: **never pitch Track 3 before the user has actually reached value in Track 1/2.** Pitching the upsell to someone who hasn't yet had their quick win is the exact trust erosion that breaks the chain — worse in an emotional/vulnerable vertical. Pair the upsell metric with the guardrail metric (refund/complaint + post-pitch drop-off): *upsell up + trust down = we pitched too early*, back it off. Same Wells-Fargo guardrail the rest of the doc carries, applied to the upsell moment where the temptation to push is highest.
 
 #### 4. Universal vs. per-client
 - **Universal platform:** the trigger-based track engine, the signal definitions (quick-win / desired-outcome / customer), the timing-by-behavior logic. Built once, all 50 inherit.
@@ -777,19 +793,19 @@ The one hard line: **never pitch Track 3 before the user has actually reached va
 - **Resist:** per-client bespoke nurture flows — a special. Config the universal tracks.
 
 #### 5. Measure it right
-**Primary: ascension** — `mid_ticket_subscribed / low_ticket_purchased` and `high_ticket_offer_clicked`(→confirmed) per client. **Secondary: return** — `nurture_reengaged` (Track 2 working). **NOT:** messages sent / "nurture shipped" (output theater — sending nurture into the void isn't ascension). **Guardrail:** refund/complaint + post-pitch drop-off (pitched-too-early detection).
+**Primary: upsell** — `mid_ticket_subscribed / low_ticket_purchased` and `high_ticket_offer_clicked`(→confirmed) per client. **Secondary: return** — `nurture_reengaged` (Track 2 working). **NOT:** messages sent / "nurture shipped" (output theater — sending nurture into the void isn't upsell). **Guardrail:** refund/complaint + post-pitch drop-off (pitched-too-early detection).
 
 #### 6. Prioritization + first move
 - **Top-tier** — recommend slotting **ahead of B.5/B.6/B.7** in the build order (highest-leverage lever after the clunky-fix, and closest to the retention outcome).
-- **Cheapest first move:** before building a track engine, **map the current post-purchase nurture as-is** (what, if anything, happens in the 24–48h window today?) and read the `nurture_reengaged` baseline once Item Zero ships. If the window is currently empty, even a *single* well-timed Track-2 quick-win message (no selling) is a cheap A/B against nothing — graded on return + downstream ascension.
+- **Cheapest first move:** before building a track engine, **map the current post-purchase nurture as-is** (what, if anything, happens in the 24–48h window today?) and read the `nurture_reengaged` baseline once Item Zero ships. If the window is currently empty, even a *single* well-timed Track-2 quick-win message (no selling) is a cheap A/B against nothing — graded on return + downstream upsell.
 
-**Numbers we'd want (don't have):** what the 24–48h nurture *currently* does (is the window empty or already worked?); the baseline `nurture_reengaged` and mid-ticket ascension rate per client; whether the paid AI can fire the quick-win / desired-outcome signals that gate the tracks.
+**Numbers we'd want (don't have):** what the 24–48h nurture *currently* does (is the window empty or already worked?); the baseline `nurture_reengaged` and mid-ticket upsell rate per client; whether the paid AI can fire the quick-win / desired-outcome signals that gate the tracks.
 
 ---
 
 ## What's still missing from the roadmap (higher leverage than parts of the current list)
 
-1. **The ascension hand-off / mid-ticket upgrade moment** — *now addressed: added as **§B.8** (top-tier).* The roadmap previously improved the top of the funnel but barely touched the moment of monetization; B.8 makes it a real item.
+1. **The upsell hand-off / mid-ticket upsell moment** — *now addressed: added as **§B.8** (top-tier).* The roadmap previously improved the top of the funnel but barely touched the upsell moment; B.8 makes it a real item.
 2. **A deliberate expert-trust feature (buyer-side — Opportunity 6 in the OST, the near-empty branch).** Experts judge us on "does it sound like me / can I trust it with my reputation" — and the expert is the one who *pays us and can churn.* Today we have reputation *guardrails* (B.4 §7, B.3 §4) but no *feature* that makes the buyer *feel* control and confidence. The expert's first quick win is **"I heard the Brain talk and it sounded like me."** Candidate (for review, not committed): a lightweight **expert-facing "this is what your AI is saying / sounds like / recommends" surface** — letting the expert hear samples, see what it will/won't say, and approve voice/boundaries, turning the VSL's "you stay in full control" promise into an experienced product moment rather than a one-time onboarding step. Small to start; it's the only deliberate work on the side of the product that renews us. *Measure: client confidence/renewal signals, not a consumer metric.*
 3. **End-user churn / cold-signal detection** (post-instrumentation) so the system (or client) can re-engage a user going quiet — the forward-looking retention lever.
 
@@ -799,7 +815,7 @@ The one hard line: **never pitch Track 3 before the user has actually reached va
 
 - **One June outcome, chosen: end-user retention / return** (the first link in the chain; the clunky-UX evidence points straight at it) — framed as a *learning* goal until Item Zero makes it measurable. The Opportunity Solution Tree hangs every feature off this; once the funnel data lands, concentrate on the single opportunity with the biggest leak rather than advancing all branches.
 - **A metric you can't read isn't a guardrail, it's a wish.** This is why Item Zero ships first.
-- **Don't optimize ascension by pushing harder.** Conversion gains that erode trust break the whole chain.
+- **Don't optimize upsell by pushing harder.** Conversion gains that erode trust break the whole chain.
 
 ---
 
@@ -815,22 +831,23 @@ This pulls together the "numbers we'd want" scattered across every section, grou
 - **Voice unit economics:** estimated cost-per-voice-call vs. the $17 + retainer. *(Voice viability — B.4 §7.5.)*
 - Where does **genuine multi-step reasoning** happen in the paid AI? *(Thinking/progress — B.6.)*
 - Where is the **high-ticket booking captured** (Calendly / GHL / other), and the **Stripe access model** (Connect vs. per-client keys)? *(A.6 / PH-5 / PH-5b.)*
-- What does the **24–48h nurture do today** — empty, or already worked? *(Ascension — B.8.)*
+- What does the **24–48h nurture do today** — empty, or already worked? *(Upsell — B.8.)*
 - Is there a clean **"diagnosis reached" signal** in the pipeline, or must the agent emit one? *(A.8.)*
 - Which clients are in **regulated verticals** (health/finance)? *(Sets the default-off list for voice, claim-specificity, and the ethical gating.)*
 
 **B — Numbers Item Zero will produce (the baselines everything is measured against):**
 - Per-stage **funnel drop-off** map (where end-users actually leak) — re-prioritizes the whole OST.
 - **Quiz → $17 purchase** rate (+ per-client variance).
-- **`nurture_reengaged`** baseline + **mid-/high-ticket ascension** rates per client.
+- **`nurture_reengaged`** baseline + **mid-/high-ticket upsell** rates per client.
 - **Post-purchase activation** rate (entry → first value) + **time-to-first-value** *(A.9 / B.7).*
 - **Generation latency by stage + mode** (incl. voice).
-- **Voice-caller** return/ascension baseline (once cohorted).
+- **Voice-caller** return/upsell baseline (once cohorted).
 
 **C — Decisions for Lucas / the review meeting (calls, not data):**
-- **Focus:** ship a focused core (Item Zero + Speed + Reply-pacing + Ascension) and defer/gate the rest, or keep all as a menu?
+- **Focus:** ship a focused core (Item Zero + Speed + Reply-pacing + Upsell) and defer/gate the rest, or keep all as a menu?
 - **Owner:** stand up a product trio (PM + design + eng) to own the one outcome?
 - **Ethical line** for vulnerable verticals (how restrained on the tease / curiosity-loop).
 - **Outcome-based pricing** for Kodara's retainer (explore once outcomes are measurable).
 - **$17 model-fit:** tripwire / trial / product? (Sets what B.8 must do.)
-- **Qualitative discovery:** add user/expert interviews, or stay data-first for June?
+- **Quiz paywall model (flagged by codebase review):** keep the live **free personalized-plan preview** at the paywall (LQ4), switch to **paywall-the-payoff** (B.1's proposal), or a middle path (tease structure, reveal substance only post-pay)? Conversion lift vs. trust/refund risk.
+- **Qualitative discovery:** add fresh user/expert interviews (starting from the existing `end-customer-profile.md`), or stay data-first for June?
