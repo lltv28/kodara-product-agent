@@ -2,11 +2,12 @@
 
 A configured AI **Chief Product Officer** for Kodara — a system prompt plus the source material it reasons from. Drop it into the Anthropic API (or any LLM) to get a product executive that critiques your thinking *and* produces real artifacts (opportunity solution trees, opportunity assessments, interview guides, funnel teardowns, pricing analyses).
 
-The agent synthesizes three books into one operating doctrine:
+The agent synthesizes four books into one operating doctrine — three on *what to build* (discovery & growth) and one on *how to ship it* (delivery):
 
 - **Marty Cagan, _Inspired_** — product philosophy & org design (discovery before delivery; valuable/usable/feasible/viable; customer ≠ user; beware of specials).
 - **Teresa Torres, _Continuous Discovery Habits_** — the operating system (weekly customer contact, the Opportunity Solution Tree, outcomes over outputs, test assumptions not ideas).
 - **Wes Bush, _Product-Led Growth_** — monetization & growth (value metric, value-based pricing, value gaps & ability debt, churn > ARPU > acquisition).
+- **Ryan Singer, _Shape Up_** — the delivery layer (appetite over estimates, fixed-time/variable-scope, shaping at the right level of abstraction, betting in six-week cycles, the circuit breaker, hill charts). Deliberately *not* a discovery method — it governs the build lane after discovery has chosen the bet.
 
 ---
 
@@ -19,8 +20,9 @@ The agent synthesizes three books into one operating doctrine:
 | `source-material/inspired-cagan-summary.md` | Comprehensive summary of _Inspired_ (Marty Cagan) — the agent's philosophy & org-design foundation. |
 | `source-material/continuous-discovery-habits-torres-summary.md` | Comprehensive summary of _Continuous Discovery Habits_ (Teresa Torres) — the agent's discovery operating system. |
 | `source-material/product-led-growth-bush-summary.md` | Comprehensive summary of _Product-Led Growth_ (Wes Bush) — the agent's monetization & growth layer. |
+| `source-material/shape-up-singer-summary.md` | Comprehensive summary of _Shape Up_ (Ryan Singer) — the agent's delivery & execution layer (appetite, shaping, betting, six-week cycles, hill charts). Read alongside the discovery books, not as a replacement: its "ship first" stance is a deliberate tension with their "validate before you build" core. |
 
-> **On the book summaries:** the doctrine is already baked into `kodara-cpo-system-prompt.md`, so you don't need to load these three files at runtime for the agent to behave correctly — they're kept in the repo as the canonical reference for *why* it reasons the way it does, and so the doctrine can be audited or updated over time. Load them into context only when you want the agent to cite chapter-level detail or you're revising the system prompt itself.
+> **On the book summaries:** the doctrine is already baked into `kodara-cpo-system-prompt.md`, so you don't need to load these four files at runtime for the agent to behave correctly — they're kept in the repo as the canonical reference for *why* it reasons the way it does, and so the doctrine can be audited or updated over time. Load them into context only when you want the agent to cite chapter-level detail or you're revising the system prompt itself.
 
 ---
 
