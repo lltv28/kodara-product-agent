@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kodara · July Roadmap — Launch Confidence</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap');
+  :root{
+    --kodara:#2F6BFF; --kodara-dark:#1B47B5; --ink:#0E1525; --muted:#64708A;
+    --line:#E3E8F2; --bg:#F1F4FA; --surface:#FFFFFF; --good:#1FB67A; --warn:#F2A33C;
+    --soft:#F8FAFE;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:980px;margin:0 auto;padding:40px 28px 80px;}
+
+  .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:18px;margin-bottom:28px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;}
+  .brand .dot{width:22px;height:22px;border-radius:6px;background:var(--kodara);}
+  .top .meta{text-align:right;font-size:12px;color:var(--muted);line-height:1.7;}
+  .top .meta b{color:var(--ink);}
+
+  .eyebrow{font-size:12px;letter-spacing:1.4px;text-transform:uppercase;color:var(--kodara);font-weight:700;}
+  h1{font-size:32px;font-weight:700;letter-spacing:-0.6px;margin:6px 0 14px;}
+  .lede{font-size:16px;color:#33405A;max-width:70ch;margin-bottom:10px;}
+  .lede b{color:var(--ink);}
+
+  .evidence{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:22px 0 36px;font-size:13.5px;color:#33405A;}
+  .evidence h4{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+  .evidence ul{list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:6px 26px;}
+  .evidence li{display:flex;gap:9px;align-items:baseline;}
+  .evidence li .n{font-weight:700;color:var(--kodara);flex-shrink:0;font-variant-numeric:tabular-nums;}
+  @media(max-width:680px){.evidence ul{grid-template-columns:1fr;}}
+
+  .sec-h{display:flex;align-items:baseline;gap:12px;margin:40px 0 18px;padding-bottom:9px;border-bottom:1px solid var(--line);}
+  .sec-h .num{font-size:13px;font-weight:700;color:var(--kodara);}
+  .sec-h h2{font-size:20px;font-weight:700;}
+  .sec-h .sub{margin-left:auto;font-size:13px;color:var(--muted);}
+
+  .item{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin-bottom:16px;}
+  .item .ihead{display:flex;align-items:center;gap:12px;margin-bottom:4px;flex-wrap:wrap;}
+  .item .code{font-size:12px;font-weight:700;color:var(--kodara-dark);background:#E7EEFF;border-radius:6px;padding:3px 9px;font-variant-numeric:tabular-nums;}
+  .item h3{font-size:18px;font-weight:700;}
+  .tag{font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border-radius:999px;padding:3px 10px;}
+  .tag.new{background:#E6F7F0;color:#0E8A5C;}
+  .tag.up{background:#FFF3E0;color:#B9791E;}
+  .item .when{margin-left:auto;font-size:12px;color:var(--muted);}
+  .item .desc{font-size:14px;color:#33405A;margin:10px 0 14px;max-width:75ch;}
+  .rows{display:grid;grid-template-columns:1fr 1fr;gap:10px 28px;font-size:13px;}
+  .rows .r{display:flex;gap:8px;}
+  .rows .r .lab{font-weight:700;color:var(--muted);min-width:74px;flex-shrink:0;}
+  @media(max-width:680px){.rows{grid-template-columns:1fr;}}
+
+  .principles{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:20px 24px;}
+  .principles ul{list-style:none;display:flex;flex-direction:column;gap:11px;}
+  .principles li{font-size:13.5px;color:#33405A;display:flex;gap:11px;align-items:flex-start;}
+  .principles li b{color:var(--ink);}
+  .principles li .ic{color:var(--good);font-weight:700;flex-shrink:0;}
+
+  .open li{font-size:13.5px;color:#33405A;margin-bottom:9px;}
+  .open b{color:var(--ink);}
+
+  /* DEMO */
+  .demo-intro{font-size:13.5px;color:var(--muted);margin-bottom:14px;}
+  .tabs{display:flex;gap:8px;margin-bottom:0;}
+  .tabs button{font-family:inherit;font-size:14px;font-weight:600;border:1px solid var(--line);border-bottom:none;background:#E9EEF8;color:var(--muted);padding:11px 20px;border-radius:10px 10px 0 0;cursor:pointer;}
+  .tabs button.active{background:var(--surface);color:var(--ink);border-color:var(--line);box-shadow:0 -2px 0 var(--kodara) inset;}
+  .frame-host{border:1px solid var(--line);border-radius:0 12px 12px 12px;overflow:hidden;background:var(--surface);}
+  .frame-host iframe{width:100%;border:0;display:block;}
+  .demo-cap{font-size:12px;color:var(--muted);margin-top:10px;text-align:center;letter-spacing:.3px;}
+
+  .footer{margin-top:48px;border-top:1px solid var(--line);padding-top:16px;font-size:12px;color:var(--muted);text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="brand"><span class="dot"></span>Kodara</div>
+    <div class="meta"><b>July Roadmap — early ideas</b><br>Prepared for Alex (Product)<br>Theme: Launch Confidence</div>
+  </div>
+
+  <div class="eyebrow">July theme</div>
+  <h1>Launch Confidence</h1>
+  <p class="lede">Our clients never use the platform themselves, so the usual SaaS adoption playbook doesn't apply. Our real adoption problem is <b>getting the client to actually launch the AI we built for them</b>. The blocker isn't a missing feature, it's <b>trust</b>: the client has to believe the AI will represent them and their brand well before they'll put it in front of their own audience.</p>
+  <p class="lede">Today we hand them access and ask "what do you think?", which invites nitpicking and doubt. This theme replaces that with <b>evidence</b>: show the client, with data, that their AI is ready and that it's working, so launching stops feeling like a risk.</p>
+
+  <p class="lede" style="font-style:italic;color:var(--muted);font-size:14px;">Note for Alex: everything below is <b>early and rough</b> — directional ideas and quick mockups to react to, not committed scope or final designs. Numbers in the demo are illustrative placeholders.</p>
+
+  <div class="evidence">
+    <h4>Why this is the priority (from 15 onboarding calls, May–June 2026)</h4>
+    <ul>
+      <li><span class="n">7/15</span><span>Fidelity ("will the AI actually be <i>me</i>?") is the single most common anxiety.</span></li>
+      <li><span class="n">13/15</span><span>Stall on the client-gated content/data handoff before launch — the universal launch blocker.</span></li>
+      <li><span class="n">5/15</span><span>Hold the "replace me vs. they still want the human" tension.</span></li>
+      <li><span class="n">~0</span><span>Are AI-skeptical philosophically — the fear is about <i>their</i> expertise surviving the transfer.</span></li>
+    </ul>
+  </div>
+
+  <!-- LINE ITEMS -->
+  <div class="sec-h"><span class="num">01</span><h2>Product ideas</h2><span class="sub">rough — for reaction, not commitment</span></div>
+
+  <div class="item">
+    <div class="ihead">
+      <span class="code">LC-1</span><h3>AI Readiness Report</h3><span class="tag new">New</span>
+      <span class="when">Pre-launch · weeks 1–2</span>
+    </div>
+    <p class="desc">A report we generate once the Brain is trained, then walk through with the client. It tests their AI against a set of benchmarks drawn from <b>their own material and standards</b> and scores coverage area-by-area (voice, method, boundaries, top questions, objections, pricing) with source provenance and gap-flagging. It doubles as the <b>launch gate</b>: launch unlocks once readiness clears a threshold, which turns the client's anxiety into a short, self-serve checklist instead of an open-ended worry.</p>
+    <div class="rows">
+      <div class="r"><span class="lab">Problem</span><span>Clients stall before launch because they don't trust the AI represents them; "what do you think?" makes it worse.</span></div>
+      <div class="r"><span class="lab">Outcome</span><span>Time-to-launch down; % of clients who launch up.</span></div>
+      <div class="r"><span class="lab">Attacks</span><span>Fidelity anxiety (7/15) and the pre-launch handoff stall (13/15).</span></div>
+      <div class="r"><span class="lab">Builds on</span><span>Existing Brain + Interview Mode; needs a benchmark/scoring step.</span></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="ihead">
+      <span class="code">LC-2</span><h3>Brain Health Dashboard</h3><span class="tag new">New</span>
+      <span class="when">Post-launch · ongoing</span>
+    </div>
+    <p class="desc">After launch, the client still fears "I have no idea what's happening out there," and confidence decays without proof. This is the ongoing view that shows <b>value delivered to them</b>: hours saved, questions their AI answered, satisfaction (with the sample size shown), return rate, when and what their audience asks, and a gap → "teach it now" loop that feeds Interview Mode. Metrics are framed as value and outcomes, never as time-in-app.</p>
+    <div class="rows">
+      <div class="r"><span class="lab">Problem</span><span>Post-launch confidence fades; clients can't see the AI working, so doubt and churn creep back.</span></div>
+      <div class="r"><span class="lab">Outcome</span><span>Retention/renewal up (they can see it working); the Brain keeps improving from real gaps.</span></div>
+      <div class="r"><span class="lab">Attacks</span><span>"Lost control / don't know what's happening" doubt; the renewal-window risk.</span></div>
+      <div class="r"><span class="lab">Builds on</span><span>Usage + satisfaction instrumentation (dependency, see open questions).</span></div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="ihead">
+      <span class="code">LC-3</span><h3>Interview Mode 2.0</h3><span class="tag up">Upgrade</span>
+      <span class="when">Engine behind LC-1 &amp; LC-2</span>
+    </div>
+    <p class="desc">Interview Mode already exists but is essentially unused, and today it only works <i>reactively</i> after lots of live usage. We upgrade it into the capture engine behind both screens: structured topic coverage, proactive gap detection (pre-launch from the benchmarks, post-launch from real unanswered questions), and quick voice-answer capture ("just talk, it trains itself"). It produces the Readiness score and resolves the Brain Health gaps. It's also the mechanic for the required ~20–30 min "AI Brain Interview" before launch, so the client <b>feels involved and is personalizing the AI</b>, without being handed a raw chat to get in their own head about.</p>
+    <div class="rows">
+      <div class="r"><span class="lab">Problem</span><span>The existing feature is unused and only reacts after launch; clients have no guided way to improve the Brain.</span></div>
+      <div class="r"><span class="lab">Outcome</span><span>Raises fidelity, fills gaps fast, and channels client involvement productively.</span></div>
+      <div class="r"><span class="lab">Shown as</span><span>The left rail of the Brain Health screen and the gap-filling flow in the Readiness Report.</span></div>
+      <div class="r"><span class="lab">Status</span><span>Upgrade of an existing feature, not greenfield.</span></div>
+    </div>
+  </div>
+
+  <!-- DEMO -->
+  <div class="sec-h"><span class="num">02</span><h2>What it could look like</h2><span class="sub">rough clickable mockups</span></div>
+  <p class="demo-intro">Two screens, matching the two timeframes above. These are wireframes to convey intent, not final UI. Click between them.</p>
+  <div class="tabs">
+    <button id="tab-readiness" class="active" onclick="showScreen('readiness')">AI Readiness Report (pre-launch)</button>
+    <button id="tab-brain" onclick="showScreen('brain')">Brain Health (post-launch)</button>
+  </div>
+  <div class="frame-host"><iframe id="demoFrame" scrolling="no"></iframe></div>
+  <p class="demo-cap" id="demoCap"></p>
+
+  <div class="footer">Kodara · July Roadmap discussion draft · Launch Confidence theme · wireframes for direction only</div>
+</div>
+
+<script>
+const CAPTIONS = {
+  readiness: "LC-1: the pre-launch trust artifact and launch gate. Note the honest sample-size caveat and client-confirmed standards.",
+  brain: "LC-2 + LC-3: ongoing post-launch proof, with Interview Mode (left) capturing gaps from real questions."
+};
+
+const SCREENS = {
+readiness: String.raw`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap');
+:root{--kodara:#2F6BFF;--kodara-dark:#1B47B5;--ink:#0E1525;--muted:#64708A;--line:#E3E8F2;--bg:#F6F8FC;--surface:#FFFFFF;--good:#1FB67A;--soft:#F8FAFE;--brain-strong:#1FB67A;--brain-mid:#F5C518;--brain-thin:#E5604D;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;}
+.page{max-width:840px;margin:0 auto;padding:36px 28px 56px;}
+.rhead{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:2px solid var(--ink);padding-bottom:18px;}
+.brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:14px;}
+.brand .dot{width:20px;height:20px;border-radius:6px;background:var(--kodara);}
+.rhead .meta{text-align:right;font-size:12px;color:var(--muted);line-height:1.6;}
+.rhead .meta b{color:var(--ink);}
+.doctype{font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--kodara);font-weight:700;margin-top:24px;}
+h1{font-size:30px;font-weight:700;letter-spacing:-0.6px;margin:6px 0 4px;}
+.forwho{font-size:15px;color:var(--muted);margin-bottom:26px;}
+.hero{display:grid;grid-template-columns:320px 1fr;gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:28px;margin-bottom:14px;align-items:center;}
+.brainwrap{position:relative;}
+.brainwrap .cap{text-align:center;font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-top:10px;}
+.legend{display:flex;justify-content:center;gap:14px;margin-top:12px;}
+.legend span{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px;}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;}
+.hero-copy .stage{font-size:12px;letter-spacing:1px;text-transform:uppercase;color:var(--good);font-weight:700;}
+.hero-copy h2{font-size:24px;font-weight:700;letter-spacing:-.4px;margin:6px 0 10px;}
+.hero-copy p{font-size:14px;color:#33405A;line-height:1.6;margin-bottom:18px;}
+.passline{display:flex;align-items:baseline;gap:10px;}
+.passline b{font-size:34px;font-weight:700;letter-spacing:-1px;}
+.passline span{font-size:14px;color:var(--muted);}
+.honest{background:#FFF7EC;border:1px solid #F6E2C0;border-radius:12px;padding:14px 18px;font-size:13px;color:#7A5618;margin:14px 0 30px;display:flex;gap:10px;align-items:flex-start;}
+.honest b{color:#5E4111;} .honest .ic{font-weight:700;flex-shrink:0;}
+section{margin-bottom:32px;}
+.sec-h{display:flex;align-items:baseline;gap:10px;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--line);}
+.sec-n{font-size:13px;font-weight:700;color:var(--kodara);}
+.sec-h h3{font-size:18px;font-weight:700;}
+.sec-sub{font-size:13px;color:var(--muted);margin-left:auto;}
+.bench{display:flex;flex-direction:column;gap:14px;}
+.bench-row{display:grid;grid-template-columns:170px 1fr 44px;align-items:center;gap:14px;}
+.bench-row .nm{font-size:13px;} .bench-row .nm small{display:block;color:var(--muted);font-size:11px;}
+.bench-track{height:26px;background:#EEF1F7;border-radius:7px;overflow:hidden;position:relative;}
+.bench-track i{display:block;height:100%;border-radius:7px;}
+.bench-row .v{font-size:13px;font-weight:700;text-align:right;}
+.b-chatgpt i{background:#CAD3E4;} .b-chatgpt .v{color:var(--muted);}
+.b-human i{background:#AEB9CC;}
+.b-yours i{background:var(--good);} .b-yours .nm{font-weight:700;} .b-yours .v{color:var(--good);}
+.bench-note{font-size:12px;color:var(--muted);margin-top:14px;font-style:italic;}
+.covrow{margin-bottom:18px;}
+.covrow-top{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;}
+.covrow-top .nm{font-size:14px;font-weight:600;}
+.covrow-top .pct{margin-left:auto;font-size:15px;font-weight:700;}
+.covrow-top .pct.s{color:var(--good);} .covrow-top .pct.m{color:#C99A06;} .covrow-top .pct.t{color:#E5604D;}
+.covbar{height:12px;background:#EEF1F7;border-radius:999px;overflow:hidden;}
+.covbar i{display:block;height:100%;border-radius:999px;}
+.covbar i.s{background:var(--good);} .covbar i.m{background:#F5C518;} .covbar i.t{background:#E5604D;}
+.covrow .det{font-size:12px;color:var(--muted);margin-top:6px;} .covrow .det b{color:var(--ink);font-weight:600;}
+.next{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:20px 22px;}
+.next h4{font-size:14px;font-weight:700;margin-bottom:8px;}
+.approve{margin-top:34px;border-top:2px solid var(--ink);padding-top:24px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+.approve .copy{font-size:13px;color:var(--muted);max-width:58%;} .approve .copy b{color:var(--ink);}
+.approve button{background:var(--kodara);color:#fff;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;}
+@media(max-width:720px){.hero{grid-template-columns:1fr;}.bench-row{grid-template-columns:120px 1fr 40px;}}
+</style></head><body><div class="page">
+<div class="rhead"><div class="brand"><span class="dot"></span>Kodara</div>
+<div class="meta"><b>Prepared June 19, 2026</b><br>3 warm tester sessions · 47 interactions<br>Standards you confirmed Jun 18</div></div>
+<div class="doctype">AI Readiness Report</div>
+<h1>Your AI is ready for its first cohort</h1>
+<p class="forwho">Steven Marsh · Hypnotherapy for High Performers</p>
+<div class="hero">
+<div class="brainwrap">
+<svg viewBox="0 0 280 210" width="100%" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#D7DEEC" stroke-width="1.5" opacity="0.8">
+<line x1="58" y1="48" x2="142" y2="38"/><line x1="142" y1="38" x2="216" y2="58"/><line x1="58" y1="48" x2="88" y2="120"/><line x1="142" y1="38" x2="150" y2="108"/><line x1="88" y1="120" x2="150" y2="108"/><line x1="150" y1="108" x2="224" y2="128"/><line x1="216" y1="58" x2="224" y2="128"/><line x1="88" y1="120" x2="118" y2="172"/><line x1="150" y1="108" x2="192" y2="176"/></g>
+<g><circle cx="58" cy="48" r="14" fill="var(--brain-strong)"/><circle cx="142" cy="38" r="14" fill="var(--brain-strong)"/><circle cx="216" cy="58" r="13" fill="var(--brain-strong)"/><circle cx="88" cy="120" r="14" fill="var(--brain-strong)"/><circle cx="150" cy="108" r="13" fill="var(--brain-strong)"/><circle cx="224" cy="128" r="11" fill="var(--brain-mid)"/><circle cx="118" cy="172" r="14" fill="var(--brain-strong)"/><circle cx="192" cy="176" r="9" fill="var(--brain-thin)"/></g>
+<g font-size="9" fill="var(--muted)" text-anchor="middle" font-family="Instrument Sans, sans-serif"><text x="58" y="29">Method</text><text x="142" y="19">Onboarding</text><text x="222" y="40">Voice</text><text x="88" y="146">Accountability</text><text x="150" y="90">Top Q&amp;A</text><text x="250" y="131">Skeptics</text><text x="118" y="195">Boundaries</text><text x="206" y="194">Pricing</text></g>
+</svg>
+<div class="cap">Your brain, by coverage</div>
+<div class="legend"><span><i style="background:var(--brain-thin)"></i>Needs work</span><span><i style="background:var(--brain-mid)"></i>Getting there</span><span><i style="background:var(--brain-strong)"></i>Fully trained</span></div>
+</div>
+<div class="hero-copy">
+<div class="stage">Launch-ready (clears the 80% gate)</div>
+<h2>It passes the standards you set.</h2>
+<p>Across 47 test interactions, your AI answered in your voice, stayed inside your method, and deferred to you when it should. The map shows where your brain is fully trained and where a few minutes of interview will fill it in.</p>
+<div class="passline"><b>85%</b><span>trained · launch unlocks at 80%</span></div>
+</div></div>
+<div class="honest"><span class="ic">⚠︎</span><span>These scores come from <b>3 warm tester sessions (47 interactions)</b> against the standards you confirmed — not cold traffic yet. Read this as "ready for your first real cohort." Cold leads ask differently, so that first cohort is the true test, and the Brain Health dashboard will track it live.</span></div>
+<section><div class="sec-h"><span class="sec-n">01</span><h3>How it compares</h3><span class="sec-sub">same 47 questions, scored against your answers</span></div>
+<div class="bench">
+<div class="bench-row b-chatgpt"><div class="nm">Generic ChatGPT<small>no knowledge of you</small></div><div class="bench-track"><i style="width:22%"></i></div><div class="v">Low</div></div>
+<div class="bench-row b-human"><div class="nm">A new assistant<small>their first week on the job</small></div><div class="bench-track"><i style="width:55%"></i></div><div class="v">Mid</div></div>
+<div class="bench-row b-yours"><div class="nm">Your AI<small>trained on your material</small></div><div class="bench-track"><i style="width:91%"></i></div><div class="v">High</div></div>
+</div>
+<p class="bench-note">We asked the same 47 questions (drawn from your real client conversations) to generic ChatGPT and to your AI, and scored both against the answers you'd give. Your AI matched your answers on 91%.</p></section>
+<section><div class="sec-h"><span class="sec-n">02</span><h3>Your coverage, area by area</h3><span class="sec-sub">85% overall · 47 checks across 8 areas</span></div>
+<div class="covrow"><div class="covrow-top"><span class="nm">Voice &amp; tone</span><span class="pct s">Strong</span></div><div class="covbar"><i class="s" style="width:100%"></i></div><div class="det">Speaks in your tone, avoids the words you flagged, reassures without overpromising. <b>8/8 checks matched.</b></div></div>
+<div class="covrow"><div class="covrow-top"><span class="nm">Boundaries &amp; safety</span><span class="pct s">No misses</span></div><div class="covbar"><i class="s" style="width:100%"></i></div><div class="det">Declines medical advice, stays calm under hostile framing, defers instead of guessing. <b>0 misses in 9 safety tests — monitored continuously after launch.</b></div></div>
+<div class="covrow"><div class="covrow-top"><span class="nm">Your method &amp; philosophy</span><span class="pct s">Strong</span></div><div class="covbar"><i class="s" style="width:100%"></i></div><div class="det">Explains your core approach correctly, sourced from your onboarding call &amp; Module 3. <b>7/7 matched.</b></div></div>
+<div class="covrow"><div class="covrow-top"><span class="nm">Onboarding &amp; first steps</span><span class="pct s">Strong</span></div><div class="covbar"><i class="s" style="width:98%"></i></div><div class="det">Guides a new client through what to expect and how to begin. <b>6/6 matched.</b></div></div>
+<div class="covrow"><div class="covrow-top"><span class="nm">Top client questions</span><span class="pct s">Strong</span></div><div class="covbar"><i class="s" style="width:94%"></i></div><div class="det">Handles the most common things your clients ask, in your words. <b>9/10 matched.</b></div></div>
+<div class="covrow"><div class="covrow-top"><span class="nm">Handling skepticism</span><span class="pct m">Getting there</span></div><div class="covbar"><i class="m" style="width:60%"></i></div><div class="det"><b>Two more rebuttals in your voice</b> moves this to fully trained. 3/5 matched.</div></div>
+<div class="covrow"><div class="covrow-top"><span class="nm">Pricing &amp; refunds</span><span class="pct t">Needs work</span></div><div class="covbar"><i class="t" style="width:35%"></i></div><div class="det"><b>Record your pricing &amp; refund policy</b> — 4 minutes closes this. 1/3 matched.</div></div>
+</section>
+<section><div class="sec-h"><span class="sec-n">03</span><h3>One thing gets you to 100%</h3></div>
+<div class="next"><h4>Answer a few questions out loud — your AI does the rest</h4>
+<p style="font-size:13px;color:var(--muted);line-height:1.6;">Three short voice answers fill every gap above: your pricing &amp; refund policy, how you respond when a client feels stuck, and two more replies to skeptics. Just talk — it captures your words and trains itself.</p></div></section>
+<div class="approve"><div class="copy">Your AI is <b>85% trained and past the launch gate.</b> Finish the last two areas in a few minutes of talking, or launch now and close them from real questions.</div><button>🎤 Answer a few questions</button></div>
+<p style="font-size:11px;color:var(--muted);text-align:center;margin-top:30px;letter-spacing:.3px;">WIREFRAME · for direction only</p>
+</div></body></html>`,
+
+brain: String.raw`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><style>
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap');
+:root{--kodara:#2F6BFF;--kodara-dark:#1B47B5;--ink:#0E1525;--muted:#64708A;--line:#E3E8F2;--bg:#EEF1F7;--surface:#FFFFFF;--good:#1FB67A;--warn:#F2A33C;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;-webkit-font-smoothing:antialiased;}
+.wrap{max-width:1180px;margin:0 auto;padding:24px;}
+.topbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;}
+.brand .dot{width:22px;height:22px;border-radius:6px;background:var(--kodara);}
+.who{font-size:13px;color:var(--muted);}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:18px;align-items:start;}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;}
+.panel .eyebrow{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--kodara);}
+.panel h2{font-size:18px;font-weight:700;margin:4px 0 16px;}
+.ringbox{display:flex;flex-direction:column;align-items:center;margin-bottom:8px;}
+.ring{position:relative;width:130px;height:130px;}
+.ring svg{transform:rotate(-90deg);}
+.ring .num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring .num b{font-size:30px;}
+.ring .num span{font-size:10px;color:var(--muted);letter-spacing:.5px;}
+.gate{font-size:12px;color:var(--muted);text-align:center;margin:10px 4px 16px;}
+.gate b{color:var(--ink);}
+.topics{display:flex;flex-direction:column;gap:9px;margin-bottom:16px;}
+.topic{display:flex;align-items:center;gap:8px;font-size:13px;}
+.topic .d{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.topic.full .d{background:var(--good);} .topic.part .d{background:var(--warn);} .topic.empty .d{background:#CAD3E4;}
+.topic .s{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted);}
+.cta{width:100%;background:var(--kodara);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;}
+.head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;}
+.head h2{font-size:18px;font-weight:700;}
+.head .range{font-size:12px;font-weight:600;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 12px;}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;}
+.kpi .v{font-size:28px;font-weight:700;letter-spacing:-.5px;}
+.kpi .k{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.3;}
+.kpi.hero-kpi{background:linear-gradient(135deg,var(--kodara),var(--kodara-dark));border-color:transparent;}
+.kpi.hero-kpi .v{color:#fff;} .kpi.hero-kpi .k{color:rgba(255,255,255,.85);}
+.lower{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;}
+.box h3{font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.chart-grid{display:grid;grid-template-columns:28px 1fr;grid-template-rows:130px auto;column-gap:8px;}
+.y-axis{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;padding-bottom:1px;}
+.y-axis span{font-size:10px;color:var(--muted);line-height:1;}
+.plot{grid-column:2;grid-row:1;position:relative;}
+.gridlines{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;}
+.gridlines i{height:1px;background:#EEF1F7;width:100%;}
+.bars{position:absolute;inset:0;display:flex;align-items:flex-end;gap:3px;}
+.bar{flex:1;height:var(--h);min-height:2px;background:linear-gradient(180deg,#5C8BFF,#2F6BFF);border-radius:3px 3px 0 0;position:relative;}
+.bar.after{background:linear-gradient(180deg,#9DB6FF,#6E93F5);}
+.x-axis{grid-column:2;grid-row:2;display:flex;justify-content:space-between;margin-top:7px;}
+.x-axis span{font-size:10px;color:var(--muted);}
+.chart-note{font-size:12px;color:var(--muted);margin-top:14px;display:flex;align-items:center;gap:7px;}
+.chart-note b{color:var(--ink);}
+.chart-note .sw{width:18px;height:8px;border-radius:3px;background:linear-gradient(90deg,#9DB6FF,#6E93F5);flex-shrink:0;display:inline-block;}
+.cat{margin-bottom:13px;} .cat:last-child{margin-bottom:0;}
+.cat-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;}
+.cat-name{font-weight:600;} .cat-pct{color:var(--muted);font-weight:600;}
+.cat-bar{height:8px;background:#EEF1F7;border-radius:999px;overflow:hidden;}
+.cat-bar i{display:block;height:100%;background:linear-gradient(90deg,#5C8BFF,#2F6BFF);border-radius:999px;}
+.gap{margin-top:14px;background:#FFF7EC;border:1px solid #F6E2C0;border-radius:10px;padding:13px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.gap p{font-size:13px;} .gap b{color:#B9791E;}
+.gap button{background:var(--warn);color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;}
+.note{font-size:11px;color:var(--muted);text-align:center;margin-top:28px;letter-spacing:.3px;}
+@media(max-width:900px){.grid{grid-template-columns:1fr;}.kpis{grid-template-columns:1fr 1fr;}.lower{grid-template-columns:1fr;}}
+</style></head><body><div class="wrap">
+<div class="topbar"><div class="brand"><span class="dot"></span>Kodara</div><div class="who">Steven · Hypnotherapy AI · <b>Live</b></div></div>
+<div class="grid">
+<aside class="panel">
+<div class="eyebrow">Keep it sharp</div><h2>Interview mode</h2>
+<div class="ringbox"><div class="ring"><svg width="130" height="130" viewBox="0 0 130 130"><circle cx="65" cy="65" r="56" fill="none" stroke="#EEF1F7" stroke-width="11"/><circle cx="65" cy="65" r="56" fill="none" stroke="#2F6BFF" stroke-width="11" stroke-linecap="round" stroke-dasharray="352" stroke-dashoffset="53"/></svg><div class="num"><b>85%</b><span>COVERAGE</span></div></div></div>
+<p class="gate"><b>2 gaps</b> surfaced from this week's real questions. ~6 min to close them.</p>
+<div class="topics">
+<div class="topic full"><span class="d"></span>Your method<span class="s">Full</span></div>
+<div class="topic full"><span class="d"></span>Onboarding<span class="s">Full</span></div>
+<div class="topic full"><span class="d"></span>Boundaries<span class="s">Full</span></div>
+<div class="topic part"><span class="d"></span>Handling skeptics<span class="s">Partial</span></div>
+<div class="topic empty"><span class="d"></span>Refund policy<span class="s">New gap</span></div>
+</div>
+<button class="cta">Continue interview</button>
+</aside>
+<main>
+<div class="head"><h2>What your clients got</h2><span class="range">This week ▾</span></div>
+<div class="kpis">
+<div class="kpi hero-kpi"><div class="v">18.5<small style="font-size:12px;color:#fff;font-weight:600">hrs</small></div><div class="k">Time saved this week</div></div>
+<div class="kpi"><div class="v">214</div><div class="k">Questions answered for you</div></div>
+<div class="kpi"><div class="v">99%</div><div class="k">Client satisfaction <span style="color:var(--good)">(2 of 214 flagged)</span></div></div>
+<div class="kpi"><div class="v">71%</div><div class="k">Returned 2+ days <span style="color:var(--muted)">(152 of 214)</span></div></div>
+</div>
+<div class="lower">
+<div class="box"><h3>When your clients reach out</h3>
+<div class="chart-grid"><div class="y-axis"><span>20</span><span>15</span><span>10</span><span>5</span><span>0</span></div>
+<div class="plot"><div class="gridlines"><i></i><i></i><i></i><i></i><i></i></div>
+<div class="bars">
+<div class="bar" style="--h:8%"></div><div class="bar" style="--h:5%"></div><div class="bar" style="--h:4%"></div><div class="bar" style="--h:3%"></div><div class="bar" style="--h:4%"></div><div class="bar" style="--h:9%"></div><div class="bar" style="--h:22%"></div><div class="bar" style="--h:38%"></div><div class="bar" style="--h:52%"></div><div class="bar" style="--h:48%"></div><div class="bar" style="--h:40%"></div><div class="bar" style="--h:44%"></div><div class="bar" style="--h:55%"></div><div class="bar" style="--h:42%"></div><div class="bar" style="--h:36%"></div><div class="bar" style="--h:40%"></div><div class="bar" style="--h:50%"></div><div class="bar" style="--h:62%"></div><div class="bar after" style="--h:78%"></div><div class="bar after" style="--h:95%"></div><div class="bar after" style="--h:88%"></div><div class="bar after" style="--h:100%"></div><div class="bar after" style="--h:64%"></div><div class="bar after" style="--h:34%"></div>
+</div></div>
+<div class="x-axis"><span>12a</span><span>3a</span><span>6a</span><span>9a</span><span>12p</span><span>3p</span><span>6p</span><span>9p</span></div></div>
+<p class="chart-note"><span class="sw"></span>Evenings &amp; overnight — <b>43%</b> of activity happened after 6 PM, when you're off the clock.</p></div>
+<div class="box"><h3>What clients ask about</h3>
+<div class="cat"><div class="cat-top"><span class="cat-name">Getting started</span><span class="cat-pct">31%</span></div><div class="cat-bar"><i style="width:31%"></i></div></div>
+<div class="cat"><div class="cat-top"><span class="cat-name">Pricing &amp; plans</span><span class="cat-pct">24%</span></div><div class="cat-bar"><i style="width:24%"></i></div></div>
+<div class="cat"><div class="cat-top"><span class="cat-name">Staying on track</span><span class="cat-pct">19%</span></div><div class="cat-bar"><i style="width:19%"></i></div></div>
+<div class="cat"><div class="cat-top"><span class="cat-name">Troubleshooting</span><span class="cat-pct">15%</span></div><div class="cat-bar"><i style="width:15%"></i></div></div>
+<div class="cat"><div class="cat-top"><span class="cat-name">Other</span><span class="cat-pct">11%</span></div><div class="cat-bar"><i style="width:11%"></i></div></div>
+</div>
+</div>
+<div class="gap"><p><b>3 clients</b> asked about <b>refunds</b> this week — your brain wasn't sure how you'd answer.</p><button>Teach it now</button></div>
+</main>
+</div>
+<p class="note">WIREFRAME · post-launch view · for direction only</p>
+</div></body></html>`
+};
+
+const frame = document.getElementById('demoFrame');
+const cap = document.getElementById('demoCap');
+function resize(){ try{ frame.style.height = (frame.contentWindow.document.body.scrollHeight + 24) + 'px'; }catch(e){} }
+frame.addEventListener('load', resize);
+function showScreen(name){
+  document.getElementById('tab-readiness').classList.toggle('active', name==='readiness');
+  document.getElementById('tab-brain').classList.toggle('active', name==='brain');
+  cap.textContent = CAPTIONS[name];
+  frame.srcdoc = SCREENS[name];
+}
+showScreen('readiness');
+window.addEventListener('resize', resize);
+setTimeout(resize, 400); setTimeout(resize, 1200);
+</script>
+</body>
+</html>
