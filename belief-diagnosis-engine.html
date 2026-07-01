@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kodara — The Belief-Diagnosis Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --white:#FFFFFF;
+  --ink:#1a1a1a;
+  --n50:#FAFAFA;
+  --n200:#E5E5E5;
+  --n300:#D4D4D4;
+  --n500:#737373;
+  --n700:#404040;
+  --al-25:rgba(26,26,26,0.04);
+  --al-50:rgba(26,26,26,0.06);
+  --al-100:rgba(26,26,26,0.09);
+  --al-200:rgba(26,26,26,0.20);
+  --al-500:rgba(26,26,26,0.48);
+  --al-600:rgba(26,26,26,0.60);
+  --brand:#106844;
+  --brand-deep:#0a4730;
+  --brand-bright:#14794f;
+  --brand-50:rgba(16,104,68,0.06);
+  --brand-100:rgba(16,104,68,0.08);
+  --brand-200:rgba(16,104,68,0.12);
+  --brand-300:rgba(16,104,68,0.18);
+  --brand-600:rgba(16,104,68,0.55);
+  --sky:#0ea5e9;
+  --sky-deep:#0369a1;
+  --amber:#febc2e;
+  --coral:#ff736a;
+  --font:'Instrument Sans',sans-serif;
+  --font-hero:'Instrument Serif',serif;
+  --shadow-card:0px 8px 5px rgba(0,0,0,0.01),0px 4px 4px rgba(0,0,0,0.02),0px 1px 2px rgba(0,0,0,0.02);
+  --shadow-lift:0px 24px 15px rgba(0,0,0,0.02),0px 11px 11px rgba(0,0,0,0.03),0px 3px 6px rgba(0,0,0,0.04);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--n50);color:var(--ink);
+  font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased;
+  font-variation-settings:'wdth' 100;
+}
+.wrap{max-width:840px;margin:0 auto;padding:0 28px}
+
+/* eyebrow — Kodara's signature tiny caps label */
+.eyebrow{
+  font-size:11px;letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--brand);font-weight:600;margin:0 0 22px;
+}
+
+/* hero */
+.hero{padding:96px 0 60px;border-bottom:1px solid var(--al-100)}
+.hero h1{
+  font-family:var(--font-hero);font-weight:400;font-size:76px;line-height:1.0;
+  margin:0 0 24px;letter-spacing:-0.01em;
+}
+.hero h1 em{font-style:italic;color:var(--brand)}
+.lede{font-size:21px;color:var(--n500);max-width:640px;margin:0;line-height:1.5}
+.meta{margin-top:38px;display:flex;gap:10px;flex-wrap:wrap}
+.chip{
+  font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;
+  color:var(--n700);background:var(--white);border:1px solid var(--al-100);
+  padding:7px 14px;border-radius:999px;box-shadow:var(--shadow-card);
+}
+.chip b{color:var(--brand)}
+
+/* sections */
+section{padding:60px 0;border-bottom:1px solid var(--al-100)}
+.snum{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--brand);font-weight:600;display:block;margin-bottom:14px}
+h2{font-family:var(--font-hero);font-weight:400;font-size:44px;line-height:1.08;margin:0 0 10px;letter-spacing:-0.005em}
+h2 em{font-style:italic;color:var(--brand)}
+.sub{font-size:19px;color:var(--n500);margin:0 0 32px;max-width:660px;line-height:1.5}
+.sub em{font-style:italic;color:var(--ink)}
+h3{font-size:22px;margin:40px 0 6px;font-weight:600;letter-spacing:-0.005em}
+p{margin:0 0 16px}
+
+/* thesis block — deep brand green, the deck's boldest surface */
+.thesis{background:var(--brand-deep);color:var(--white);border-radius:16px;padding:44px 40px;margin:8px 0 0;box-shadow:var(--shadow-lift)}
+.thesis .k{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin:0 0 18px;font-weight:600}
+.thesis p{font-family:var(--font-hero);font-size:27px;line-height:1.35;margin:0;color:#f4f8f6}
+.thesis em{color:#34d399;font-style:italic}
+
+/* engine diagram */
+.engine{margin:36px 0 8px}
+.eng-core{background:var(--white);border:1px solid var(--brand-200);border-radius:14px;padding:24px 26px;margin-bottom:18px;box-shadow:var(--shadow-card)}
+.eng-core .tag{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--brand);font-weight:600}
+.eng-core h4{font-family:var(--font-hero);font-weight:400;font-size:28px;margin:6px 0 8px}
+.eng-core p{margin:0;color:var(--n500);font-size:16px}
+.feeds{text-align:center;font-size:11px;letter-spacing:0.14em;color:var(--al-500);text-transform:uppercase;margin:18px 0;font-weight:600}
+.eng-surfaces{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.surf{background:var(--white);border:1px solid var(--al-100);border-radius:12px;padding:16px 17px;box-shadow:var(--shadow-card)}
+.surf .n{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--al-500);font-weight:600}
+.surf h5{margin:6px 0 4px;font-size:15px;font-weight:600}
+.surf p{margin:0;font-size:13.5px;color:var(--n500);line-height:1.45}
+
+/* demo cards */
+.demo{background:var(--white);border:1px solid var(--al-100);border-radius:16px;margin:22px 0;overflow:hidden;box-shadow:var(--shadow-card)}
+.demo-head{padding:24px 26px 4px}
+.demo-tag{font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--brand);font-weight:600;display:inline-flex;align-items:center;gap:8px;background:var(--brand-50);padding:5px 12px;border-radius:999px}
+.demo-head h3{font-family:var(--font-hero);font-weight:400;margin:14px 0 6px;font-size:28px}
+.demo-head p{color:var(--n500);font-size:15.5px;margin:0}
+.stage{background:var(--n50);border-radius:14px;margin:18px;padding:28px 24px;border:1px solid var(--al-50)}
+.demo-note{padding:2px 26px 22px;font-size:14.5px;color:var(--n500)}
+.demo-note b{color:var(--ink);font-weight:600}
+
+/* chat mockup atoms */
+.chat-name{font-size:13px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:5px}
+.chat-cred{font-size:11.5px;color:var(--al-500);margin-top:1px}
+.chat-bubble{background:var(--white);border:1px solid var(--al-100);border-radius:16px;border-top-left-radius:5px;padding:14px 16px;font-size:14.5px;color:var(--ink);line-height:1.55;max-width:480px;box-shadow:var(--shadow-card)}
+.fnmark{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;padding:0 4px;margin-left:2px;font-size:10px;font-weight:600;color:var(--brand);background:var(--brand-100);border-radius:5px;vertical-align:super;line-height:1;cursor:pointer}
+.avatar{width:38px;height:38px;border-radius:50%;background:var(--brand-100);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.srchdr{font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--al-500);margin-bottom:6px;font-weight:600}
+
+/* chat frame — wraps a demo so it reads as a live AI conversation */
+.chat-frame{max-width:540px}
+.chat-row{display:flex;gap:11px;align-items:flex-start}
+.chat-col{flex:1;min-width:0}
+.chat-msg{background:var(--white);border:1px solid var(--al-100);border-radius:16px;border-top-left-radius:5px;padding:14px 16px;box-shadow:var(--shadow-card)}
+.chat-say{font-size:14.5px;color:var(--ink);line-height:1.55;margin:0 0 12px}
+.chat-say:last-child{margin-bottom:0}
+.chat-user{display:flex;justify-content:flex-end;margin-bottom:16px}
+.chat-user span{background:var(--brand);color:var(--white);border-radius:16px;border-top-right-radius:5px;padding:10px 15px;font-size:14px;max-width:78%;line-height:1.45}
+.voice-tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--brand);background:var(--brand-50);padding:5px 11px;border-radius:999px;margin-bottom:12px}
+.voice-dot{width:6px;height:6px;border-radius:50%;background:var(--brand);animation:vpulse 1.4s ease-in-out infinite}
+@keyframes vpulse{0%,100%{opacity:.35}50%{opacity:1}}
+
+/* lever table */
+.levers{width:100%;border-collapse:collapse;margin:24px 0 0;font-size:15px}
+.levers th{text-align:left;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--al-500);font-weight:600;padding:0 12px 10px 0;border-bottom:1px solid var(--al-100)}
+.levers td{padding:14px 12px 14px 0;border-bottom:1px solid var(--al-50);vertical-align:top}
+.levers td:first-child{font-weight:600;white-space:nowrap;padding-right:20px}
+.pill{font-size:10px;font-weight:600;padding:4px 11px;border-radius:999px;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap}
+.pill.built{background:var(--brand-100);color:var(--brand)}
+.pill.next{background:rgba(14,165,233,0.1);color:var(--sky-deep)}
+.pill.danger{background:rgba(255,115,106,0.14);color:#c0392b}
+
+/* callout */
+.callout{border-left:3px solid var(--brand);padding:6px 0 6px 22px;margin:28px 0;font-size:18px;color:var(--ink);font-family:var(--font-hero);line-height:1.4}
+
+/* open decisions */
+.open{background:var(--white);border:1px solid var(--al-100);border-left:3px solid var(--amber);border-radius:0 12px 12px 0;padding:18px 22px;margin:16px 0;box-shadow:var(--shadow-card)}
+.open.big{border-left-color:var(--coral)}
+.open h4{margin:0 0 4px;font-size:18px;font-weight:600}
+.open p{margin:0;font-size:15px;color:var(--n500)}
+.open .rec{margin-top:8px;font-size:14px;color:var(--ink)}
+.open .rec b{color:var(--brand)}
+
+.footer{padding:48px 0 90px;color:var(--al-500);font-size:12px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600}
+
+@media(max-width:640px){
+  .hero h1{font-size:50px}
+  .eng-surfaces{grid-template-columns:1fr}
+  h2{font-size:34px}
+  .thesis p{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="hero" style="padding:72px 0 40px">
+  <p class="eyebrow">Kodara · Feature &amp; design concepts</p>
+  <h1>The <em>demos.</em></h1>
+</header>
+
+<section style="border-bottom:none">
+  <div class="demo">
+    <div class="demo-head">
+      <span class="demo-tag">● Locked · Surface 01</span>
+      <h3>The sharpie live-drawing</h3>
+      <p>A visual primitive draws itself stroke by stroke in a hand-sketched style, beside voice mode. The magic is the drawing, not the drawn. Buildable via stroke-dashoffset animation + roughjs on top of the template system.</p>
+    </div>
+    <div class="stage" id="stage-draw">
+      <div class="chat-frame">
+        <div class="chat-user"><span>I feel like I'm working so hard but barely moving. Where should my energy even go?</span></div>
+        <div class="chat-row">
+          <div class="avatar">SP</div>
+          <div class="chat-col">
+            <div class="chat-name">Sandra's AI <span style="color:var(--brand)" title="verified expert brain">✓</span></div>
+            <div class="chat-cred">Sobriety coach · 12 years · trained on 200+ hrs of her sessions</div>
+            <div class="chat-msg" style="margin-top:8px">
+              <div class="voice-tag"><span class="voice-dot"></span>drawing while speaking</div>
+              <p class="chat-say" style="margin-bottom:10px">Let me show you. Most of your effort is stuck down here — but your AI product lives up here.</p>
+              <svg width="100%" viewBox="0 0 560 300" role="img" aria-label="A hand-drawn two-by-two chart of effort versus reward drawing itself.">
+                <path class="ink i1" d="M181 41 Q178 150 180 260" stroke="#1a1a1a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                <path class="ink i2" d="M91 151 Q280 154 480 149" stroke="#1a1a1a" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+                <text class="hlbl l3" x="180" y="26" text-anchor="middle">high reward</text>
+                <text class="hlbl l3" x="180" y="286" text-anchor="middle">low reward</text>
+                <text class="hlbl l3" x="70" y="156" text-anchor="end">low effort</text>
+                <text class="hlbl l3" x="500" y="156" text-anchor="start">high effort</text>
+                <path class="ink i4" d="M263 96 Q270 89 277 96 Q283 103 276 109 Q269 115 263 108 Q258 101 263 96Z" stroke="#106844" stroke-width="3" fill="rgba(16,104,68,0.18)" stroke-linecap="round"/>
+                <text class="hlbl l5" x="292" y="102" style="fill:#1a1a1a">your AI product</text>
+                <path class="ink i6" d="M384 200 Q390 194 396 200 Q401 206 395 211 Q389 216 384 210 Q380 205 384 200Z" stroke="#737373" stroke-width="3" fill="rgba(26,26,26,0.09)" stroke-linecap="round"/>
+                <text class="hlbl l7" x="410" y="206">doing it all yourself</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:14px">
+        <button onclick="replayDraw()" style="font-family:var(--font);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:var(--brand);background:var(--brand-100);border:none;padding:8px 16px;border-radius:999px;cursor:pointer">↻ watch it draw</button>
+      </div>
+    </div>
+    <div class="demo-note"><b>Vocabulary — the universal six:</b> two-by-two (tradeoff), line-goes-up (trajectory), this-vs-that (contrast), the ladder (progression), before/after (transformation), process arrow (sequence). A second tier of domain templates sits below, selected per avatar. Because the shapes are known, every stroke path is known — which is exactly what makes the live-drawing cheap. The dumb-simple decision and the holy-shit decision are the same decision.</div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-head">
+      <span class="demo-tag">● Locked · Surfaces 02 + 03</span>
+      <h3>Cited proof &amp; the mixed-source row</h3>
+      <p>Social proof disguised as a citation. Alone, proof reads as marketing; sitting in a sources row beside a neutral knowledge citation, it reads as evidence. The highest-value proof stays expanded by default so the result is seen without any action.</p>
+    </div>
+    <div class="stage">
+      <div class="chat-frame">
+        <div class="chat-user"><span>Should I run more ads to my audience, or is there a smarter first move?</span></div>
+        <div class="chat-row">
+          <div class="avatar">SP</div>
+          <div class="chat-col">
+            <div class="chat-name">Sandra's AI <span style="color:var(--brand)" title="verified expert brain">✓</span></div>
+            <div class="chat-cred">Sobriety coach · 12 years · trained on 200+ hrs of her sessions</div>
+            <div class="chat-msg" style="margin-top:8px">
+              <p class="chat-say">Put a small paid offer in front of your audience before spending on new ads — a buyer who's paid you anything is already invested and acts on your advice.<span class="fnmark" onclick="tog('le1')">1</span></p>
+              <div id="le1" style="margin-top:2px;background:var(--n50);border:1px solid var(--brand-200);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--n500)">
+                <div style="display:flex;gap:10px;align-items:flex-start">
+                  <div style="width:28px;height:28px;border-radius:50%;background:var(--brand-100);color:var(--brand);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0">LE</div>
+                  <div><b style="color:var(--ink)">This advice helped Leanne</b> make back over 100% of her ad spend on the front end, then enroll $19,000 in clients from one month of ads.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;font-weight:600;color:var(--al-500);margin:14px 0 0;text-align:center">the highest-value proof stays open by default</p>
+    </div>
+    <div class="demo-note"><b>Restraint is the feature.</b> A footnote appears only on the two or three most load-bearing, most-doubted claims — the engine knows which. Citing the expert's own brain does double duty: it answers the field's #1 anxiety ("is this really me, or is it making things up?") by proving fidelity in real time.</div>
+  </div>
+
+  <div class="demo">
+    <div class="demo-head">
+      <span class="demo-tag">● Locked · Surface 05</span>
+      <h3>The two-futures fork</h3>
+      <p>Future-pacing and honest scarcity are one lever pointed two ways. The diverging lines create the felt gap; the cards below fill in the specifics. Feeling opens them, specifics close them — in that order.</p>
+    </div>
+    <div class="stage">
+      <div class="chat-frame">
+        <div class="chat-user"><span>I keep telling myself I'll deal with this next quarter. Is that fine?</span></div>
+        <div class="chat-row">
+          <div class="avatar">SP</div>
+          <div class="chat-col">
+            <div class="chat-name">Sandra's AI <span style="color:var(--brand)" title="verified expert brain">✓</span></div>
+            <div class="chat-cred">Sobriety coach · 12 years · trained on 200+ hrs of her sessions</div>
+            <div class="chat-msg" style="margin-top:8px">
+              <p class="chat-say" style="margin-bottom:10px">Here's the honest fork. Same starting point, two very different years.</p>
+              <svg width="100%" viewBox="0 0 520 200" role="img" aria-label="Two lines diverging from one point: acting rises, waiting stays flat.">
+                <line x1="52" y1="20" x2="52" y2="168" stroke="rgba(26,26,26,0.2)" stroke-width="1"/>
+                <line x1="52" y1="168" x2="490" y2="168" stroke="rgba(26,26,26,0.2)" stroke-width="1"/>
+                <path d="M52 144 Q200 128 320 80 T490 30" fill="none" stroke="#106844" stroke-width="3.5" stroke-linecap="round"/>
+                <path d="M52 144 Q200 146 320 149 T490 152" fill="none" stroke="#737373" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="2 6"/>
+                <circle cx="52" cy="144" r="5" fill="#1a1a1a"/>
+                <circle cx="490" cy="30" r="5" fill="#106844"/>
+                <circle cx="490" cy="152" r="5" fill="#737373"/>
+                <text x="484" y="24" text-anchor="end" style="font-family:'Instrument Sans',sans-serif;font-size:12px;fill:#106844;font-weight:600">if you act</text>
+                <text x="484" y="166" text-anchor="end" style="font-family:'Instrument Sans',sans-serif;font-size:12px;fill:#737373">if you wait</text>
+                <text x="44" y="172" text-anchor="end" style="font-family:'Instrument Sans',sans-serif;font-size:11px;fill:rgba(26,26,26,0.48)">now</text>
+              </svg>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+                <div style="background:var(--brand-50);border:1px solid var(--brand-200);border-radius:12px;padding:12px 13px">
+                  <div style="font-size:12.5px;font-weight:600;color:var(--brand);margin-bottom:7px">↗ if you build this</div>
+                  <div style="font-size:12.5px;color:var(--n500);padding:2px 0">✓ marketing pays for itself by month 2</div>
+                  <div style="font-size:12.5px;color:var(--n500);padding:2px 0">✓ 12+ high-ticket clients this year</div>
+                  <div style="font-size:12.5px;color:var(--n500);padding:2px 0">✓ the business runs without you</div>
+                </div>
+                <div style="background:var(--white);border:1px solid var(--al-100);border-radius:12px;padding:12px 13px">
+                  <div style="font-size:12.5px;font-weight:600;color:var(--n500);margin-bottom:7px">→ if nothing changes</div>
+                  <div style="font-size:12.5px;color:var(--n500);padding:2px 0">– still trading hours for every sale</div>
+                  <div style="font-size:12.5px;color:var(--n500);padding:2px 0">– 99% of leads keep walking away</div>
+                  <div style="font-size:12.5px;color:var(--n500);padding:2px 0">– same plateau, another year gone</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="demo-note"><b>Deployed live:</b> the two lines draw themselves as the AI narrates the fork, then the cards populate one row at a time — every bullet built from what the buyer told the AI earlier. Both paths must come from the buyer's real inputs: the green path stays inside what the product can deliver, the gray path is their genuine status quo, never doom-tuned.</div>
+  </div>
+</section>
+
+</div>
+
+<style>
+@keyframes drawon{to{stroke-dashoffset:0}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+.ink{stroke-dasharray:600;stroke-dashoffset:600;animation:drawon .8s ease-out forwards}
+.hlbl{opacity:0;animation:fadein .4s ease-out forwards;font-family:"Bradley Hand","Segoe Print",sans-serif;font-size:15px;fill:#737373}
+.i1{animation-delay:.1s}.i2{animation-delay:.7s}.l3{animation-delay:1.2s}
+.i4{animation-delay:1.6s}.l5{animation-delay:2s}.i6{animation-delay:2.4s}.l7{animation-delay:2.8s}
+</style>
+<script>
+function tog(id){var e=document.getElementById(id);if(!e)return;e.style.display=(e.style.display==='none'||!e.style.display)?'block':'none';}
+function replayDraw(){var s=document.getElementById('stage-draw');var svg=s.querySelector('svg');var clone=svg.cloneNode(true);svg.parentNode.replaceChild(clone,svg);}
+</script>
+
+</body>
+</html>
