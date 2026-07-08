@@ -1,0 +1,749 @@
+<title>Kodara Statement of Progress — Professional Card</title>
+<style>
+  :root {
+    --page-bg: #eef3f4;
+    --page-text: #1a1a1a;
+    --page-muted: rgba(26, 26, 26, 0.55);
+    --page-card: #ffffff;
+    --page-border: rgba(26, 26, 26, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page-bg: #14181a; --page-text: #e8ecec;
+      --page-muted: rgba(232, 236, 236, 0.55);
+      --page-card: #1d2326; --page-border: rgba(232, 236, 236, 0.1);
+    }
+  }
+  :root[data-theme='dark'] {
+    --page-bg: #14181a; --page-text: #e8ecec;
+    --page-muted: rgba(232, 236, 236, 0.55);
+    --page-card: #1d2326; --page-border: rgba(232, 236, 236, 0.1);
+  }
+  :root[data-theme='light'] {
+    --page-bg: #eef3f4; --page-text: #1a1a1a;
+    --page-muted: rgba(26, 26, 26, 0.55);
+    --page-card: #ffffff; --page-border: rgba(26, 26, 26, 0.08);
+  }
+
+  :root {
+    --k-bg: #ffffff;
+    --k-text: rgba(26, 26, 26, 0.8);
+    --k-text-2: rgba(26, 26, 26, 0.6);
+    --k-muted: rgba(26, 26, 26, 0.48);
+    --k-black: #1a1a1a;
+    --k-border: rgba(26, 26, 26, 0.06);
+    --k-border-2: rgba(26, 26, 26, 0.09);
+    --k-font: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --gold: #b17c17;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--page-bg);
+    color: var(--page-text);
+    font-family: var(--k-font);
+    letter-spacing: -0.15px;
+  }
+
+  .page-head { max-width: 1020px; margin: 0 auto; padding: 40px 24px 8px; }
+  .page-head h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; text-wrap: balance; }
+  .page-head p { font-size: 14px; line-height: 22px; color: var(--page-muted); max-width: 70ch; }
+
+  .controls {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--page-bg);
+    border-bottom: 1px solid var(--page-border);
+    padding: 12px 24px;
+  }
+  .controls-inner { max-width: 1020px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+  .coach-tabs { display: flex; gap: 6px; flex-wrap: wrap; }
+  .coach-tabs button {
+    font-family: inherit; font-size: 12.5px; font-weight: 600;
+    border: 1px solid var(--page-border);
+    background: var(--page-card);
+    color: var(--page-muted);
+    border-radius: 9999px;
+    padding: 8px 14px;
+    cursor: pointer;
+  }
+  .coach-tabs button .niche { font-weight: 400; opacity: 0.75; }
+  .coach-tabs button.active { color: #fff; border-color: transparent; }
+  .coach-tabs button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  .slider-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .slider-row label { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .slider-row input[type='range'] { flex: 1; min-width: 180px; }
+  .readout { font-size: 13px; color: var(--page-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .readout strong { color: var(--page-text); }
+
+  main { max-width: 1020px; margin: 0 auto; padding: 22px 24px 72px; }
+  .lede { font-size: 13px; line-height: 20px; color: var(--page-muted); max-width: 72ch; margin-bottom: 18px; }
+
+  /* ================= STATEMENT OF PROGRESS (professional card) ================= */
+  .pro-card {
+    position: relative;
+    background:
+      radial-gradient(ellipse 420px 240px at 88% 0%, var(--brand-radial) 0%, transparent 70%),
+      var(--k-bg);
+    border: 1px solid var(--k-border-2);
+    border-radius: 18px;
+    box-shadow: 0 20px 48px rgba(12, 48, 70, 0.1);
+    padding: 26px 30px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .pro-head {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--k-border);
+  }
+  .pro-head .left { display: flex; flex-direction: column; gap: 3px; }
+  .doc-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--k-muted);
+  }
+  .doc-client { font-size: 15px; font-weight: 600; color: var(--k-black); }
+  .doc-meta { font-size: 11.5px; color: var(--k-muted); }
+  .doc-complete { font-size: 11.5px; font-weight: 600; color: var(--gold); display: none; }
+  .doc-complete.on { display: block; }
+  .pro-head .orb-mini { position: relative; width: 92px; height: 84px; flex-shrink: 0; margin: -8px -4px -14px 0; }
+  .pro-head .orb-mini canvas { width: 100%; height: 100%; display: block; }
+  .pro-head .orb-mini span {
+    position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%);
+    font-size: 8.5px; font-weight: 600; letter-spacing: 0.7px; text-transform: uppercase;
+    color: var(--brand-2); white-space: nowrap;
+  }
+
+  /* 1 · mission-first */
+  .mission { display: flex; flex-direction: column; gap: 10px; }
+  .mission h2 {
+    font-size: 24px; line-height: 31px; font-weight: 650;
+    color: var(--k-black);
+    letter-spacing: -0.4px;
+    text-wrap: balance;
+    max-width: 22ch;
+  }
+  .mission .metric-line {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .mission .metric-now { font-size: 34px; font-weight: 700; color: var(--brand-2); letter-spacing: -0.8px; }
+  .mission .metric-of { font-size: 14px; color: var(--k-text-2); }
+  .mission .metric-remaining { font-size: 12px; color: var(--k-muted); }
+  .mission-bar-wrap { display: flex; flex-direction: column; gap: 5px; max-width: 560px; }
+  .mission-bar { height: 7px; border-radius: 9999px; background: var(--brand-track); overflow: hidden; }
+  .mission-bar i { display: block; height: 100%; background: linear-gradient(90deg, var(--brand), var(--brand-2)); border-radius: 9999px; transition: width 0.25s ease; }
+  .mission-bar-labels { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--k-muted); font-variant-numeric: tabular-nums; }
+
+  /* 5 · coach assessment */
+  .assessment {
+    border-left: 2.5px solid var(--brand);
+    padding: 2px 0 2px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+    max-width: 640px;
+  }
+  .assessment p { font-size: 14px; line-height: 21px; color: var(--k-text); }
+  .assessment .sig { font-size: 11.5px; color: var(--k-muted); }
+  .assessment .sig b { color: var(--brand-2); font-weight: 600; }
+
+  /* 2 · professional units strip */
+  .units {
+    display: flex; gap: 0; flex-wrap: wrap;
+    border: 1px solid var(--k-border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .unit {
+    flex: 1; min-width: 130px;
+    padding: 11px 16px;
+    display: flex; flex-direction: column; gap: 2px;
+    border-right: 1px solid var(--k-border);
+    background: rgba(26, 26, 26, 0.012);
+  }
+  .unit:last-child { border-right: none; }
+  .unit .u-num { font-size: 16px; font-weight: 650; color: var(--k-black); font-variant-numeric: tabular-nums; }
+  .unit .u-lbl { font-size: 10px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--k-muted); }
+
+  /* 3 · stage timeline with capability */
+  .stage-block { display: flex; flex-direction: column; gap: 12px; }
+  .stage-now-line { font-size: 13px; color: var(--k-text-2); }
+  .stage-now-line b { color: var(--k-black); font-weight: 650; }
+  .stage-now-line .cap { color: var(--k-text-2); }
+  .timeline { display: flex; align-items: flex-start; }
+  .t-stop { flex: 1; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+  .t-track { display: flex; align-items: center; width: 100%; }
+  .t-node {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid var(--k-border-2);
+    background: var(--k-bg);
+    flex-shrink: 0;
+  }
+  .t-stop.passed .t-node { background: var(--brand); border-color: var(--brand); }
+  .t-stop.now .t-node {
+    background: var(--k-bg);
+    border-color: var(--brand-2);
+    box-shadow: 0 0 0 3.5px var(--brand-track);
+  }
+  .t-line { flex: 1; height: 2px; background: var(--k-border-2); }
+  .t-stop.passed .t-line { background: var(--brand); }
+  .t-stop:last-child .t-line { display: none; }
+  .t-name {
+    font-size: 10.5px; font-weight: 600;
+    color: var(--k-muted);
+    padding-right: 10px;
+    line-height: 14px;
+  }
+  .t-stop .t-num { font-size: 9px; font-weight: 600; letter-spacing: 0.5px; color: var(--k-muted); opacity: 0.7; }
+  .t-stop.passed .t-name { color: var(--k-text-2); }
+  .t-stop.now .t-name { color: var(--brand-2); }
+  @media (max-width: 640px) { .t-name { font-size: 9px; } }
+
+  /* 4 · track record + eligibility */
+  .bottom-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; align-items: start; }
+  @media (max-width: 720px) { .bottom-grid { grid-template-columns: 1fr; } }
+  .panel-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--k-muted);
+    margin-bottom: 9px;
+  }
+  .record { display: flex; flex-direction: column; gap: 1px; }
+  .rec-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--k-border);
+    font-size: 12.5px;
+  }
+  .rec-row:last-child { border-bottom: none; }
+  .rec-mark {
+    width: 17px; height: 17px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 10px; font-weight: 700;
+  }
+  .rec-row.done .rec-mark { background: var(--brand-track); color: var(--brand-2); }
+  .rec-row.todo .rec-mark { border: 1.5px solid var(--k-border-2); color: transparent; }
+  .rec-title { flex: 1; color: var(--k-text); }
+  .rec-row.todo .rec-title { color: var(--k-muted); }
+  .rec-date { font-size: 11px; color: var(--k-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .eligibility {
+    border: 1px solid var(--k-border-2);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .eligibility.qualified { border-color: rgba(177, 124, 23, 0.4); background: rgba(177, 124, 23, 0.04); }
+  .elig-status { display: flex; align-items: center; gap: 8px; }
+  .elig-chip {
+    font-size: 9.5px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+    border-radius: 5px; padding: 3px 8px;
+    background: rgba(26, 26, 26, 0.05); color: var(--k-muted);
+  }
+  .eligibility.qualified .elig-chip { background: rgba(177, 124, 23, 0.14); color: var(--gold); }
+  .elig-title { font-size: 13.5px; font-weight: 600; line-height: 18px; color: var(--k-black); }
+  .elig-sub { font-size: 11.5px; line-height: 16px; color: var(--k-muted); }
+  .elig-cta {
+    margin-top: 4px;
+    align-self: flex-start;
+    font-family: inherit; font-size: 12px; font-weight: 600;
+    background: var(--k-black); color: #fff;
+    border: none; border-radius: 9999px;
+    padding: 7px 15px; cursor: pointer;
+    display: none;
+  }
+  .eligibility.qualified .elig-cta { display: inline-block; }
+
+  /* config peek */
+  details.config {
+    margin-top: 18px;
+    border: 1px solid var(--page-border);
+    border-radius: 12px;
+    background: var(--page-card);
+    overflow: hidden;
+  }
+  details.config summary {
+    cursor: pointer; padding: 12px 16px;
+    font-size: 13px; font-weight: 600; color: var(--page-muted);
+    list-style: none;
+  }
+  details.config summary::-webkit-details-marker { display: none; }
+  details.config summary::before { content: '▸ '; }
+  details.config[open] summary::before { content: '▾ '; }
+  details.config pre {
+    margin: 0; padding: 4px 16px 16px;
+    font-size: 11.5px; line-height: 17px; overflow-x: auto;
+    color: var(--page-text);
+    font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+  }
+
+  footer.note {
+    max-width: 1020px; margin: 0 auto; padding: 8px 24px 48px;
+    font-size: 13px; line-height: 20px; color: var(--page-muted); max-width: 72ch;
+  }
+</style>
+
+<div class="page-head">
+  <h1>Statement of Progress — the professionalized card</h1>
+  <p>
+    Same universal component, adult clothing: the mission leads, progress is measured in weeks and
+    sessions instead of XP, stages are numbered and defined by capability, milestones read as a dated
+    track record, the next tier is an eligibility (not loot), and the whole thing is authored by the
+    coach as a progress review. Switch coaches, drag progress.
+  </p>
+</div>
+
+<div class="controls">
+  <div class="controls-inner">
+    <div class="coach-tabs" role="tablist" aria-label="Coach archetype"></div>
+    <div class="slider-row">
+      <label for="prog">Client progress</label>
+      <input type="range" id="prog" min="0" max="100" value="34" />
+      <span class="readout"><strong id="pct">34%</strong> · <span id="metric-readout"></span></span>
+    </div>
+  </div>
+</div>
+
+<main>
+  <p class="lede" id="coach-lede"></p>
+
+  <div class="pro-card" id="card">
+    <!-- header: document identity + orb presence -->
+    <div class="pro-head">
+      <div class="left">
+        <span class="doc-label">Statement of Progress</span>
+        <span class="doc-client" id="client-name"></span>
+        <span class="doc-meta" id="doc-meta"></span>
+        <span class="doc-complete" id="doc-complete"></span>
+      </div>
+      <div class="orb-mini">
+        <canvas id="orb" width="184" height="168"></canvas>
+        <span id="orb-caption"></span>
+      </div>
+    </div>
+
+    <!-- 1 · the mission leads -->
+    <div class="mission">
+      <h2 id="goal-text"></h2>
+      <div class="metric-line">
+        <span class="metric-now" id="metric-now"></span>
+        <span class="metric-of" id="metric-of"></span>
+        <span class="metric-remaining" id="metric-remaining"></span>
+      </div>
+      <div class="mission-bar-wrap">
+        <div class="mission-bar"><i id="goalfill" style="width: 34%"></i></div>
+        <div class="mission-bar-labels"><span id="bar-start"></span><span id="bar-end"></span></div>
+      </div>
+    </div>
+
+    <!-- 5 · coach's assessment -->
+    <div class="assessment">
+      <p id="assessment"></p>
+      <span class="sig">— <b id="coach-sig"></b> · <span id="sig-context"></span></span>
+    </div>
+
+    <!-- 2 · professional units -->
+    <div class="units">
+      <div class="unit"><span class="u-num" id="u-week"></span><span class="u-lbl" id="u-week-lbl"></span></div>
+      <div class="unit"><span class="u-num" id="u-sessions"></span><span class="u-lbl" id="u-sessions-lbl"></span></div>
+      <div class="unit"><span class="u-num" id="u-onplan"></span><span class="u-lbl">on-plan</span></div>
+      <div class="unit"><span class="u-num" id="u-next" style="font-size: 12.5px; line-height: 16px; font-weight: 600;"></span><span class="u-lbl">next up</span></div>
+    </div>
+
+    <!-- 3 · numbered stages with capability -->
+    <div class="stage-block">
+      <span class="stage-now-line" id="stage-line"></span>
+      <div class="timeline" id="timeline"></div>
+    </div>
+
+    <!-- 4 · track record + eligibility -->
+    <div class="bottom-grid">
+      <div>
+        <div class="panel-label">Track record</div>
+        <div class="record" id="record"></div>
+      </div>
+      <div>
+        <div class="panel-label">Eligibility</div>
+        <div class="eligibility" id="eligibility">
+          <div class="elig-status"><span class="elig-chip" id="elig-chip"></span></div>
+          <span class="elig-title" id="elig-title"></span>
+          <span class="elig-sub" id="elig-sub"></span>
+          <button type="button" class="elig-cta" id="elig-cta">Schedule it</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <details class="config">
+    <summary>What the plan generator produces for this coach (the `gamification` block)</summary>
+    <pre id="config-json"></pre>
+  </details>
+</main>
+
+<footer class="note">
+  Same mechanics as the game version — visible progression, earned status, tier unlock — recast in
+  credential language. Everything still maps to existing plan data; the generated naming layer now also
+  produces a capability sentence per stage and a stage-indexed assessment template in the coach's voice.
+</footer>
+
+<script>
+  /* ---------------- coach archetype configs (from onboarding-call VOC) ---------------- */
+  const COACHES = [
+    {
+      id: 'daron',
+      tab: 'Daron', niche: 'Real estate wealth',
+      lede: 'Daron Campbell teaches employed people creative real estate acquisition (his CREAM method). Stages are numbered and defined by what the client can now do; the mission — $100k banked — leads the document.',
+      brand: { accent: '#c07f1a', accent2: '#8f5c0e', light: '#e5b45c' },
+      coachName: 'Daron Campbell',
+      clientName: 'Marcus Reed',
+      program: 'CREAM Method Mentorship',
+      goalText: 'Bank $100k from your first two deals',
+      metric: { type: 'currency', base: 0, target: 100000, label: 'profit banked' },
+      duration: { label: 'Week', total: 16 }, sessionsTotal: 22, sessionsLabel: 'sessions completed',
+      ranks: [
+        { at: 0.0, name: 'Curious', can: 'you understand how creative deals work', next: 'First seller conversation',
+          review: 'CLIENT is building deal literacy fast. The goal this week is a first real seller conversation.' },
+        { at: 0.22, name: 'Deal Hunter', can: 'you can find and qualify distressed deals', next: 'First offer submitted',
+          review: 'CLIENT is finding qualified deals consistently. Next we turn a conversation into a written offer.' },
+        { at: 0.48, name: 'Negotiator', can: 'you can take a seller from first call to signed contract', next: 'First deal under contract',
+          review: 'CLIENT is two actions away from a first contract. This week is about following up with the Corpus Christi seller.' },
+        { at: 0.75, name: 'Acquisition Pro', can: 'you can close and fund deals end to end', next: 'First $100k banked',
+          review: 'First deal closed — now we compound. The focus is banking the full $100k across two deals.' },
+        { at: 1.0, name: 'Financially Free', can: 'your deals replace your paycheck', next: 'Mission complete',
+          review: 'Mission accomplished. CLIENT closed the gap — the next conversation is portfolio, not paycheck.' },
+      ],
+      milestones: ['First seller call', 'First offer in', 'Deal under contract', 'First deal closed', '$100k banked'],
+      completion: 'CREAM Method — completed 2026',
+      unlock: { atRank: 3, title: '1-on-1 Deal Review with Daron', subLocked: 'Reached at Stage 4 · Acquisition Pro', subOpen: 'Earned at Stage 4 — bring him a live deal.' },
+    },
+    {
+      id: 'jeff',
+      tab: 'Jeff', niche: 'B2B sales coaching',
+      lede: 'Jeff Bloomfield\'s neuroscience-based sales coaching (Braintrust). The metric is a close rate, the stages are a seller\'s capability arc, and the eligibility feeds his high-ticket workshop.',
+      brand: { accent: '#2d6cb5', accent2: '#1d4f8c', light: '#6ea3dd' },
+      coachName: 'Jeff Bloomfield',
+      clientName: 'Dana Whitfield',
+      program: 'NeuroSelling Program',
+      goalText: 'Lift your close rate from 18% to 30%',
+      metric: { type: 'percent', base: 18, target: 30, label: 'close rate' },
+      duration: { label: 'Week', total: 12 }, sessionsTotal: 18, sessionsLabel: 'sessions completed',
+      ranks: [
+        { at: 0.0, name: 'Order Taker', can: 'you understand why buyers really say yes', next: 'First discovery call, rebuilt',
+          review: 'CLIENT is unlearning the pitch-first habit. This week\'s discovery call is the proving ground.' },
+        { at: 0.22, name: 'Storyteller', can: 'you can teach with customer stories', next: 'Story bank built',
+          review: 'CLIENT\'s story bank is taking shape. The close rate follows the stories — it always does.' },
+        { at: 0.48, name: 'Trusted Advisor', can: 'you can run consultative calls buyers trust', next: 'Close rate above 24%',
+          review: 'CLIENT is running true advisor conversations now. We push past 24% this month.' },
+        { at: 0.75, name: 'Revenue Driver', can: 'you reliably convert at a leader\'s rate', next: 'Close rate at 30%',
+          review: 'CLIENT\'s close rate is compounding. At the current pace, 30% is a quarter away.' },
+        { at: 1.0, name: 'Sales Leader', can: 'you can coach others to sell this way', next: 'Mission complete',
+          review: '30% reached. CLIENT sells the way the brain buys — and can now teach it.' },
+      ],
+      milestones: ['NeuroSelling foundations', 'Story bank built', 'First 25% month', 'Pipeline doubled', '30% close rate'],
+      completion: 'NeuroSelling Program — completed 2026',
+      unlock: { atRank: 3, title: 'Braintrust Live Workshop with Jeff', subLocked: 'Reached at Stage 4 · Revenue Driver', subOpen: 'Earned at Stage 4 — bring your whole team.' },
+    },
+    {
+      id: 'rick',
+      tab: 'Rick', niche: 'Life transformation',
+      lede: 'Rick Cowley\'s VysionQuest — 28 sessions of guided meditation and writing toward life clarity. No dollars: the metric is a self-reported clarity rating, and the card still holds together.',
+      brand: { accent: '#2e7d5b', accent2: '#1f5a41', light: '#6fb598' },
+      coachName: 'Rick Cowley',
+      clientName: 'Elena Voss',
+      program: 'VysionQuest',
+      goalText: 'Know exactly who you are and what you want',
+      metric: { type: 'rating', base: 3, target: 10, label: 'clarity rating' },
+      duration: { label: 'Session', total: 28 }, sessionsTotal: 28, sessionsLabel: 'writings completed',
+      ranks: [
+        { at: 0.0, name: 'Seeker', can: 'you\'ve started the daily practice', next: 'Session 7 · quiet the fear',
+          review: 'CLIENT has begun the practice. The early sessions are about quieting the noise, nothing more.' },
+        { at: 0.25, name: 'Truth Writer', can: 'you can write truthfully past the fear', next: 'Session 14 · the vision emerges',
+          review: 'CLIENT\'s writing is getting honest. Session 14 is where the vision starts to surface.' },
+        { at: 0.5, name: 'Visionary', can: 'you have a written vision you believe', next: 'Session 21 · the path is chosen',
+          review: 'CLIENT has a written vision they believe. Now we choose the path that honors it.' },
+        { at: 0.75, name: 'Quest Walker', can: 'you\'re making decisions from your vision', next: 'Session 28 · the quest completes',
+          review: 'CLIENT is walking the quest. The remaining sessions turn clarity into commitment.' },
+        { at: 1.0, name: 'Fulfilled', can: 'you live aligned with who you are', next: 'Quest complete',
+          review: 'The quest is complete. CLIENT knows who they are and what they want.' },
+      ],
+      milestones: ['First meditation', 'Seven writings done', 'Vision written', 'Path chosen', 'Quest complete'],
+      completion: 'VysionQuest — completed 2026',
+      unlock: { atRank: 3, title: 'The 6-Day VysionQuest Retreat', subLocked: 'Reached at Stage 4 · Quest Walker', subOpen: 'Earned at Stage 4 — walk it live with Rick.' },
+    },
+    {
+      id: 'stephanie',
+      tab: 'Stephanie', niche: 'Money mindset',
+      lede: 'Stephanie Owens teaches the inner game of money to ambitious, hardworking people. The cushion is the outer proof of the inner shift — and the mission the card leads with.',
+      brand: { accent: '#7c4d9e', accent2: '#5d3579', light: '#ab82c7' },
+      coachName: 'Stephanie Owens',
+      clientName: 'Priya Nair',
+      program: 'Money Matters',
+      goalText: 'A 6-month money cushion — and calm to match',
+      metric: { type: 'currency', base: 0, target: 15000, label: 'cushion saved' },
+      duration: { label: 'Week', total: 12 }, sessionsTotal: 16, sessionsLabel: 'sessions completed',
+      ranks: [
+        { at: 0.0, name: 'Money Aware', can: 'you can see your money patterns clearly', next: 'First money story rewrite',
+          review: 'CLIENT has named the money story. Awareness is the first win — everything builds on it.' },
+        { at: 0.22, name: 'Money Calm', can: 'you can face your numbers without panic', next: 'First $2,500 saved',
+          review: 'The panic is losing its grip. CLIENT\'s first $2,500 is proof, not luck.' },
+        { at: 0.48, name: 'Money Confident', can: 'you save consistently without willpower', next: 'Halfway cushion · $7,500',
+          review: 'CLIENT is saving on autopilot now. The halfway cushion is in sight.' },
+        { at: 0.75, name: 'Wealth Builder', can: 'you\'re building wealth beyond the cushion', next: 'Full cushion · $15,000',
+          review: 'The cushion is nearly funded. CLIENT\'s next frontier is building, not just protecting.' },
+        { at: 1.0, name: 'Money Free', can: 'money is calm, not chaos', next: 'Mission complete',
+          review: 'Fully funded, and calm to match. CLIENT has won the inner game.' },
+      ],
+      milestones: ['Money story named', '30 days without panic', 'First $2,500', 'Halfway cushion', 'Fully funded'],
+      completion: 'Money Matters — completed 2026',
+      unlock: { atRank: 3, title: "Stephanie's Inner Circle", subLocked: 'Reached at Stage 4 · Wealth Builder', subOpen: 'Earned at Stage 4 — small-group coaching.' },
+    },
+  ];
+
+  const REC_DATES = ['Mar 28', 'Apr 19', 'May 12', 'Jun 3', 'Jun 27'];
+
+  /* ---------------- living orb ---------------- */
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function buildGeometry(n) {
+    let seed = 1337;
+    const rnd = () => { seed = (seed * 1103515245 + 12345) & 0x7fffffff; return seed / 0x7fffffff; };
+    const gold = Math.PI * (3 - Math.sqrt(5));
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const y = 1 - (i / Math.max(1, n - 1)) * 2;
+      const r = Math.sqrt(Math.max(0, 1 - y * y));
+      const th = gold * i;
+      let x = Math.cos(th) * r + (rnd() - 0.5) * 0.08;
+      let yy = y + (rnd() - 0.5) * 0.08;
+      let z = Math.sin(th) * r + (rnd() - 0.5) * 0.08;
+      const l = Math.hypot(x, yy, z) || 1;
+      pts.push({ x: x / l, y: yy / l, z: z / l, fp: rnd() * Math.PI * 2, ff: 0.2 + rnd() * 0.4, fa: 0.02 + rnd() * 0.04 });
+    }
+    const edges = [];
+    for (let i = 0; i < n; i++) {
+      const d = [];
+      for (let j = 0; j < n; j++) {
+        if (i === j) continue;
+        const dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y, dz = pts[i].z - pts[j].z;
+        d.push([dx * dx + dy * dy + dz * dz, j]);
+      }
+      d.sort((a, b) => a[0] - b[0]);
+      for (let k = 0; k < 3; k++) if (d[k][1] > i) edges.push([i, d[k][1]]);
+      if (i % 9 === 0) edges.push([i, Math.floor((i * 7919) % n)]);
+    }
+    return { pts, edges };
+  }
+
+  function createOrb(canvas) {
+    const ctx = canvas.getContext('2d');
+    const state = { p: 0.34, color: '#008ba7', geo: null, bucket: -1, angle: 0, t: 0 };
+    function ensureGeo() {
+      const n = 50 + Math.round(state.p * 210);
+      const bucket = Math.round(n / 20);
+      if (bucket !== state.bucket) { state.bucket = bucket; state.geo = buildGeometry(bucket * 20); }
+    }
+    function draw(dt) {
+      ensureGeo();
+      const w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      const { pts, edges } = state.geo;
+      const p = state.p;
+      state.angle += (0.18 + p * 0.55) * dt;
+      state.t += dt;
+      const breathe = 1 + 0.03 * Math.sin(state.t * 1.8) + 0.015 * Math.sin(state.t * 3.1 + 2);
+      const R = Math.min(w, h) * 0.36 * breathe;
+      const cx = w / 2, cy = h / 2;
+      const ca = Math.cos(state.angle), sa = Math.sin(state.angle);
+      const ct = Math.cos(-0.42), st = Math.sin(-0.42);
+      const proj = new Array(pts.length);
+      for (let i = 0; i < pts.length; i++) {
+        const q = pts[i];
+        const fo = 1 + q.fa * Math.sin(state.t * q.ff * Math.PI * 2 + q.fp) * (0.4 + p);
+        let x = q.x * fo, y = q.y * fo, z = q.z * fo;
+        const x1 = x * ca + z * sa;
+        const z1 = -x * sa + z * ca;
+        const y2 = y * ct - z1 * st;
+        const z2 = y * st + z1 * ct;
+        const pe = 1 / (1.9 - z2 * 0.45);
+        proj[i] = { sx: cx + x1 * R * pe * 1.5, sy: cy - y2 * R * pe * 1.5, d: Math.max(0, Math.min(1, (z2 + 1) * 0.5)) };
+      }
+      ctx.lineWidth = 0.7;
+      ctx.strokeStyle = state.color;
+      const la = 0.05 + p * 0.1;
+      for (let e = 0; e < edges.length; e++) {
+        const a = proj[edges[e][0]], b = proj[edges[e][1]];
+        const d = (a.d + b.d) * 0.5;
+        ctx.globalAlpha = la * (0.25 + d * d);
+        ctx.beginPath(); ctx.moveTo(a.sx, a.sy); ctx.lineTo(b.sx, b.sy); ctx.stroke();
+      }
+      ctx.fillStyle = state.color;
+      for (let i = 0; i < proj.length; i++) {
+        const pr = proj[i];
+        ctx.globalAlpha = (0.18 + p * 0.3) * (0.3 + pr.d * 0.7);
+        ctx.beginPath(); ctx.arc(pr.sx, pr.sy, 1.1 + pr.d * 0.9, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+    let last = performance.now();
+    function loop(now) {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      draw(dt);
+      requestAnimationFrame(loop);
+    }
+    if (prefersReduced) { draw(0); } else { requestAnimationFrame(loop); }
+    return { set(p, color) { state.p = p; state.color = color; if (prefersReduced) draw(0); } };
+  }
+
+  const orb = createOrb(document.getElementById('orb'));
+
+  /* ---------------- rendering ---------------- */
+  const slider = document.getElementById('prog');
+  const tabsEl = document.querySelector('.coach-tabs');
+  let activeCoach = COACHES[0];
+
+  function hexToRgba(hex, a) {
+    const v = parseInt(hex.slice(1), 16);
+    return 'rgba(' + ((v >> 16) & 255) + ',' + ((v >> 8) & 255) + ',' + (v & 255) + ',' + a + ')';
+  }
+
+  function fmt(m, val) {
+    if (m.type === 'currency') return '$' + Math.round(val).toLocaleString('en-US');
+    if (m.type === 'percent') return val.toFixed(1) + '%';
+    if (m.type === 'rating') return val.toFixed(1) + ' / 10';
+    return Math.round(val).toLocaleString('en-US');
+  }
+
+  function rankFor(c, p) {
+    let idx = 0;
+    c.ranks.forEach((r, i) => { if (p >= r.at) idx = i; });
+    return idx;
+  }
+
+  COACHES.forEach((c) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.setAttribute('role', 'tab');
+    b.innerHTML = c.tab + ' <span class="niche">· ' + c.niche + '</span>';
+    b.addEventListener('click', () => { activeCoach = c; render(); });
+    tabsEl.appendChild(b);
+  });
+
+  function render() {
+    const c = activeCoach;
+    const p = slider.value / 100;
+    const root = document.documentElement;
+
+    root.style.setProperty('--brand', c.brand.accent);
+    root.style.setProperty('--brand-2', c.brand.accent2);
+    root.style.setProperty('--brand-track', hexToRgba(c.brand.accent, 0.13));
+    root.style.setProperty('--brand-radial', hexToRgba(c.brand.light, 0.22));
+
+    Array.from(tabsEl.children).forEach((b, i) => {
+      const on = COACHES[i] === c;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', String(on));
+      b.style.background = on ? c.brand.accent : '';
+    });
+
+    document.getElementById('coach-lede').textContent = c.lede;
+    orb.set(p, c.brand.accent2);
+    document.getElementById('orb-caption').textContent = c.coachName.split(' ')[0] + ' · with you';
+
+    const ri = rankFor(c, p);
+    const rank = c.ranks[ri];
+
+    /* header */
+    document.getElementById('client-name').textContent = c.clientName + ' · ' + c.program;
+    document.getElementById('doc-meta').textContent = 'Prepared July 8, 2026 · by ' + c.coachName + "'s AI";
+    const complete = document.getElementById('doc-complete');
+    complete.textContent = '✓ ' + c.completion;
+    complete.classList.toggle('on', p >= 1);
+
+    /* 1 · mission */
+    const m = c.metric;
+    const cur = m.base + p * (m.target - m.base);
+    document.getElementById('goal-text').textContent = c.goalText;
+    document.getElementById('metric-now').textContent = fmt(m, cur);
+    document.getElementById('metric-of').textContent = 'of ' + fmt(m, m.target) + ' · ' + m.label;
+    const remaining = m.target - cur;
+    document.getElementById('metric-remaining').textContent =
+      p >= 1 ? 'goal reached' : fmt(m, remaining).replace(' / 10', '') + ' to go';
+    document.getElementById('goalfill').style.width = Math.round(p * 100) + '%';
+    document.getElementById('bar-start').textContent = 'started at ' + fmt(m, m.base);
+    document.getElementById('bar-end').textContent = 'goal · ' + fmt(m, m.target);
+    document.getElementById('metric-readout').textContent = fmt(m, cur) + ' / ' + fmt(m, m.target) + ' ' + m.label;
+    document.getElementById('pct').textContent = Math.round(p * 100) + '%';
+
+    /* 5 · assessment */
+    document.getElementById('assessment').textContent =
+      '"' + rank.review.replaceAll('CLIENT', c.clientName.split(' ')[0]) + '"';
+    document.getElementById('coach-sig').textContent = c.coachName;
+    document.getElementById('sig-context').textContent = 'Stage ' + (ri + 1) + ' review';
+
+    /* 2 · units */
+    const week = Math.max(1, Math.round(p * c.duration.total));
+    document.getElementById('u-week').textContent = week + ' of ' + c.duration.total;
+    document.getElementById('u-week-lbl').textContent = c.duration.label;
+    document.getElementById('u-sessions').textContent = Math.round(p * c.sessionsTotal);
+    document.getElementById('u-sessions-lbl').textContent = c.sessionsLabel;
+    document.getElementById('u-onplan').textContent = Math.min(100, 78 + Math.round(p * 22)) + '%';
+    document.getElementById('u-next').textContent = rank.next;
+
+    /* 3 · stage line + timeline */
+    document.getElementById('stage-line').innerHTML =
+      '<b>Stage ' + (ri + 1) + ' of ' + c.ranks.length + ' · ' + rank.name + '</b> <span class="cap">— ' + rank.can + '</span>';
+    const tl = document.getElementById('timeline');
+    tl.innerHTML = '';
+    c.ranks.forEach((r, i) => {
+      const stop = document.createElement('div');
+      stop.className = 't-stop' + (i < ri ? ' passed' : i === ri ? ' now' : '');
+      stop.innerHTML =
+        '<div class="t-track"><span class="t-node"></span><span class="t-line"></span></div>' +
+        '<span class="t-num">STAGE ' + (i + 1) + '</span>' +
+        '<span class="t-name" title="' + r.can.replace(/"/g, '&quot;') + '">' + r.name + '</span>';
+      tl.appendChild(stop);
+    });
+
+    /* 4 · track record */
+    const rec = document.getElementById('record');
+    rec.innerHTML = '';
+    const earned = Math.floor(p * c.milestones.length + 0.0001);
+    c.milestones.forEach((title, i) => {
+      const row = document.createElement('div');
+      const done = i < earned;
+      row.className = 'rec-row ' + (done ? 'done' : 'todo');
+      row.innerHTML =
+        '<span class="rec-mark">' + (done ? '✓' : '') + '</span>' +
+        '<span class="rec-title">' + title + '</span>' +
+        '<span class="rec-date">' + (done ? REC_DATES[i] : 'upcoming') + '</span>';
+      rec.appendChild(row);
+    });
+
+    /* 4 · eligibility */
+    const qualified = ri >= c.unlock.atRank;
+    const elig = document.getElementById('eligibility');
+    elig.classList.toggle('qualified', qualified);
+    document.getElementById('elig-chip').textContent = qualified ? 'Qualified' : 'Not yet eligible';
+    document.getElementById('elig-title').textContent = c.unlock.title;
+    document.getElementById('elig-sub').textContent = qualified ? c.unlock.subOpen : c.unlock.subLocked;
+
+    /* config peek */
+    document.getElementById('config-json').textContent = JSON.stringify({
+      gamification: {
+        stages: c.ranks.map((r, i) => ({
+          stage: i + 1, at: r.at, name: r.name, capability: r.can,
+          nextMilestone: r.next, assessmentTemplate: r.review,
+        })),
+        trackRecord: c.milestones,
+        completionCredential: c.completion,
+        eligibility: { atStage: c.unlock.atRank + 1, offer: c.unlock.title },
+        metricBinding: c.metric,
+        cadence: { unit: c.duration.label, total: c.duration.total, sessionsLabel: c.sessionsLabel },
+      },
+    }, null, 2);
+  }
+
+  slider.addEventListener('input', render);
+  render();
+</script>

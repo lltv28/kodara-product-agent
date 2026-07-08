@@ -1,0 +1,588 @@
+<title>Kodara Ambient Progress — 5 Treatments</title>
+<style>
+  :root {
+    --page-bg: #eef3f4;
+    --page-text: #1a1a1a;
+    --page-muted: rgba(26, 26, 26, 0.55);
+    --page-card: #ffffff;
+    --page-border: rgba(26, 26, 26, 0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --page-bg: #14181a; --page-text: #e8ecec;
+      --page-muted: rgba(232, 236, 236, 0.55);
+      --page-card: #1d2326; --page-border: rgba(232, 236, 236, 0.1);
+    }
+  }
+  :root[data-theme='dark'] {
+    --page-bg: #14181a; --page-text: #e8ecec;
+    --page-muted: rgba(232, 236, 236, 0.55);
+    --page-card: #1d2326; --page-border: rgba(232, 236, 236, 0.1);
+  }
+  :root[data-theme='light'] {
+    --page-bg: #eef3f4; --page-text: #1a1a1a;
+    --page-muted: rgba(26, 26, 26, 0.55);
+    --page-card: #ffffff; --page-border: rgba(26, 26, 26, 0.08);
+  }
+
+  /* Kodara customer tokens */
+  :root {
+    --k-bg: #ffffff;
+    --k-sidebar: rgba(0, 180, 212, 0.05);
+    --k-accent: #00b4d4;
+    --k-accent-2: #008ba7;
+    --k-accent-50: rgba(0, 175, 208, 0.06);
+    --k-accent-100: rgba(0, 180, 212, 0.1);
+    --k-accent-outline: rgba(0, 180, 212, 0.2);
+    --k-radial: rgba(183, 241, 255, 0.4);
+    --k-av1: #b7f1ff;
+    --k-av2: #e0f8ff;
+    --k-text: rgba(26, 26, 26, 0.8);
+    --k-text-2: rgba(26, 26, 26, 0.6);
+    --k-muted: rgba(26, 26, 26, 0.48);
+    --k-black: #1a1a1a;
+    --k-border: rgba(26, 26, 26, 0.06);
+    --k-border-2: rgba(26, 26, 26, 0.09);
+    --k-font: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --k-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.02), 0px 1px 2px 0px rgba(0, 0, 0, 0.02);
+    --done: #17a673;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--page-bg);
+    color: var(--page-text);
+    font-family: var(--k-font);
+    letter-spacing: -0.15px;
+  }
+
+  .page-head { max-width: 1080px; margin: 0 auto; padding: 40px 24px 8px; }
+  .page-head h1 { font-size: 22px; font-weight: 600; margin-bottom: 8px; text-wrap: balance; }
+  .page-head p { font-size: 14px; line-height: 22px; color: var(--page-muted); max-width: 66ch; }
+
+  .controls {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--page-bg);
+    border-bottom: 1px solid var(--page-border);
+    padding: 14px 24px;
+  }
+  .controls-inner {
+    max-width: 1080px; margin: 0 auto;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .controls label { font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .controls input[type='range'] { flex: 1; min-width: 200px; accent-color: var(--k-accent); }
+  .readout {
+    font-size: 13px; font-variant-numeric: tabular-nums;
+    color: var(--page-muted); white-space: nowrap;
+  }
+  .readout strong { color: var(--page-text); }
+
+  main { max-width: 1080px; margin: 0 auto; padding: 12px 24px 64px; display: flex; flex-direction: column; gap: 44px; }
+
+  .variant h2 { font-size: 16px; font-weight: 600; margin: 26px 0 6px; }
+  .variant p.note { font-size: 13px; line-height: 20px; color: var(--page-muted); max-width: 70ch; margin-bottom: 14px; }
+
+  /* ---------- mini app frame ---------- */
+  .frame {
+    display: grid;
+    grid-template-columns: 216px 1fr;
+    background: var(--k-bg);
+    border: 1px solid var(--page-border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 20px 48px rgba(12, 48, 70, 0.1);
+    min-height: 470px;
+    position: relative;
+  }
+  @media (max-width: 760px) {
+    .frame { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+  }
+  .sidebar {
+    position: relative;
+    background: var(--k-sidebar);
+    border-right: 1px solid var(--k-border);
+    padding: 18px 12px;
+    display: flex; flex-direction: column; gap: 20px;
+    overflow: hidden;
+  }
+  .sidebar > * { position: relative; z-index: 2; }
+  .agent-row { display: flex; align-items: center; gap: 10px; padding: 0 6px; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--k-av1), var(--k-av2));
+    border: 1px solid var(--k-border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--k-accent-2); font-weight: 600; font-size: 12px; flex-shrink: 0;
+  }
+  .agent-name { font-size: 13px; font-weight: 600; color: var(--k-black); line-height: 17px; }
+  .agent-sub { font-size: 10px; color: var(--k-muted); }
+  .nav { display: flex; flex-direction: column; gap: 2px; }
+  .nav a {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 9px; border-radius: 8px;
+    font-size: 13px; color: var(--k-text-2); text-decoration: none;
+  }
+  .nav a.active { background: var(--k-accent-50); color: var(--k-accent-2); font-weight: 600; }
+  .nav svg { width: 15px; height: 15px; }
+  .sidebar .spacer { flex: 1; }
+  .goal-chip {
+    margin: 0 2px;
+    background: rgba(255, 255, 255, 0.28);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--k-border);
+    border-radius: 12px;
+    padding: 11px;
+  }
+  .goal-chip .label {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.7px;
+    text-transform: uppercase; color: var(--k-accent-2); margin-bottom: 3px;
+  }
+  .goal-chip .value { font-size: 12px; line-height: 16px; color: var(--k-text); }
+
+  .app-main { position: relative; padding: 26px 30px 30px; overflow: hidden; }
+  .app-main > * { position: relative; z-index: 2; }
+  .eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--k-muted);
+  }
+  .greeting { font-size: 20px; line-height: 27px; font-weight: 600; color: var(--k-black); }
+  .head-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+  .metric-chip {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
+    border: 1px solid var(--k-border);
+    border-radius: 9999px;
+    padding: 7px 13px;
+    font-size: 11px; color: var(--k-text-2); white-space: nowrap;
+  }
+  .metric-chip strong { color: var(--k-black); font-variant-numeric: tabular-nums; }
+
+  /* trail rows (shared content) */
+  .trail { max-width: 460px; display: flex; flex-direction: column; }
+  .titem { display: flex; gap: 12px; padding: 6px 0; }
+  .titem .rail { display: flex; flex-direction: column; align-items: center; width: 26px; flex-shrink: 0; }
+  .titem .rail .stem { flex: 1; width: 0; border-left: 2px solid var(--k-accent-100); margin-top: 4px; }
+  .titem:last-child .rail .stem { border-left-color: transparent; }
+  .dot {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--k-bg);
+    border: 2px solid var(--k-accent-outline);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--k-accent-2); flex-shrink: 0;
+  }
+  .dot svg { width: 11px; height: 11px; }
+  .dot.done { background: var(--done); border-color: var(--done); color: #fff; }
+  .dot.current { background: var(--k-accent); border-color: var(--k-accent); color: #fff; }
+  .tcard {
+    flex: 1;
+    background: var(--k-bg);
+    border: 1px solid var(--k-border-2);
+    border-radius: 14px;
+    padding: 10px 13px;
+    box-shadow: var(--k-shadow);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tcard .txt { flex: 1; display: flex; flex-direction: column; gap: 1px; }
+  .kind { font-size: 9px; font-weight: 600; letter-spacing: 0.7px; text-transform: uppercase; color: var(--k-muted); }
+  .kind.done-k { color: var(--done); }
+  .kind.now-k { color: var(--k-accent-2); }
+  .ttitle { font-size: 12px; font-weight: 600; color: var(--k-black); line-height: 16px; }
+  .titem.current .tcard { border-color: var(--k-accent); box-shadow: 0 5px 15px rgba(0, 180, 212, 0.14); }
+  .btn {
+    font-family: inherit; font-size: 11px; font-weight: 600;
+    background: var(--k-accent); color: #fff;
+    border: none; border-radius: 9999px;
+    padding: 6px 13px; cursor: pointer;
+  }
+
+  /* =========== 7a: corner glow =========== */
+  .glow-el {
+    position: absolute; z-index: 1;
+    top: -160px; right: -120px;
+    width: 520px; height: 420px;
+    background: radial-gradient(ellipse at center, var(--k-radial) 0%, transparent 65%);
+    opacity: calc(0.25 + var(--p) * 0.75);
+    transform: scale(calc(0.55 + var(--p) * 0.85));
+    transform-origin: top right;
+    pointer-events: none;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  .glow-hint {
+    font-size: 10px; color: var(--k-muted);
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(3px);
+    border-radius: 9999px; padding: 4px 10px;
+    position: absolute; top: 14px; right: 14px; z-index: 3;
+  }
+
+  /* =========== 7b: avatar ring =========== */
+  .ring-wrap { position: relative; width: 52px; height: 52px; flex-shrink: 0; }
+  .ring-wrap .avatar { width: 40px; height: 40px; position: absolute; top: 6px; left: 6px; font-size: 13px; }
+  .ring-wrap svg.ring { position: absolute; inset: 0; width: 52px; height: 52px; transform: rotate(-90deg); }
+  .ring-track { fill: none; stroke: var(--k-accent-100); stroke-width: 3.5; }
+  .ring-fill {
+    fill: none; stroke: var(--k-accent); stroke-width: 3.5; stroke-linecap: round;
+    filter: drop-shadow(0 0 3px rgba(0, 180, 212, 0.5));
+    transition: stroke-dashoffset 0.3s ease;
+  }
+  .ring-pct {
+    position: absolute; bottom: -4px; right: -6px;
+    background: var(--k-accent); color: #fff;
+    font-size: 8.5px; font-weight: 700; font-variant-numeric: tabular-nums;
+    border-radius: 9999px; padding: 2px 6px;
+    border: 2px solid var(--k-bg);
+  }
+
+  /* =========== 7c: sidebar tide =========== */
+  .tide {
+    position: absolute; z-index: 1;
+    left: 0; right: 0; bottom: 0;
+    height: calc(var(--p) * 100%);
+    background: linear-gradient(180deg, rgba(0, 180, 212, 0.10), rgba(0, 180, 212, 0.20));
+    transition: height 0.35s ease;
+    pointer-events: none;
+  }
+  .tide::before {
+    content: '';
+    position: absolute; top: -7px; left: 0; right: 0; height: 8px;
+    background-repeat: repeat-x;
+    background-size: 46px 8px;
+    background-image: radial-gradient(ellipse 23px 8px at 50% 100%, rgba(0, 180, 212, 0.14) 49%, transparent 51%);
+  }
+  .tide-label {
+    position: absolute; z-index: 2;
+    left: 12px; bottom: 10px;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.5px;
+    color: var(--k-accent-2);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* =========== 7d: horizon sunrise =========== */
+  .horizon {
+    position: absolute; z-index: 1;
+    left: 0; right: 0; top: 0; height: 150px;
+    overflow: hidden; pointer-events: none;
+  }
+  .horizon svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sun {
+    position: absolute;
+    width: 34px; height: 34px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 180, 212, 0.85) 0%, rgba(0, 180, 212, 0.25) 55%, transparent 75%);
+    box-shadow: 0 0 34px 14px rgba(0, 180, 212, 0.18);
+    transition: left 0.3s ease, top 0.3s ease, opacity 0.3s ease;
+  }
+  .horizon .flag { position: absolute; font-size: 13px; transition: opacity 0.3s ease; }
+
+  /* =========== 7e: constellation =========== */
+  .sky { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .star {
+    position: absolute;
+    width: 5px; height: 5px; border-radius: 50%;
+    background: var(--k-accent-100);
+    transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .star.lit {
+    background: var(--k-accent);
+    box-shadow: 0 0 8px 2px rgba(0, 180, 212, 0.35);
+    transform: scale(1.25);
+  }
+  .star.goal-star {
+    width: 9px; height: 9px;
+    background: var(--k-border-2);
+  }
+  .star.goal-star.lit {
+    background: #ffb547;
+    box-shadow: 0 0 14px 4px rgba(255, 181, 71, 0.4);
+  }
+  .sky svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sky .constellation-line { stroke: var(--k-accent-100); stroke-width: 1; stroke-dasharray: 3 4; fill: none; }
+  .sky-count {
+    position: absolute; top: 14px; right: 14px; z-index: 3;
+    font-size: 10px; color: var(--k-muted);
+    background: rgba(255,255,255,0.6); backdrop-filter: blur(3px);
+    border-radius: 9999px; padding: 4px 10px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glow-el, .tide, .ring-fill, .sun, .star, .horizon .flag { transition: none; }
+  }
+
+  footer.note {
+    max-width: 1080px; margin: 0 auto; padding: 0 24px 48px;
+    font-size: 13px; line-height: 20px; color: var(--page-muted); max-width: 70ch;
+  }
+</style>
+
+<div class="page-head">
+  <h1>Ambient progress — five treatments of idea #7</h1>
+  <p>
+    The goal reminder with zero words: some part of the interface physically changes as Jamie gets closer
+    to $10k months. Drag the slider and watch all five react. Each frame is the Trail home, simplified.
+  </p>
+</div>
+
+<div class="controls">
+  <div class="controls-inner">
+    <label for="prog">Simulate progress toward goal</label>
+    <input type="range" id="prog" min="0" max="100" value="34" />
+    <span class="readout"><strong id="pct">34%</strong> · revenue <strong id="rev">$4,192</strong> / $10k</span>
+  </div>
+</div>
+
+<main>
+  <!-- ================= 7a ================= -->
+  <section class="variant">
+    <h2>7a · The corner glow grows</h2>
+    <p class="note">
+      Your existing gradient ellipse becomes the meter. At day one it's a faint wisp; at goal it floods the
+      corner. Nobody reads it, everyone notices it month over month. The cheapest to ship — it's already in
+      every screen.
+    </p>
+    <div class="frame" data-frame>
+      <aside class="sidebar">
+        <div class="agent-row"><div class="avatar">SB</div><div><div class="agent-name">Sarah Bennett</div><div class="agent-sub">Marketing Coach</div></div></div>
+        <nav class="nav">
+          <a href="#" class="active" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="5"/></svg>Journey</a>
+          <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 1 1-3.1-6.3L21 4v6h-6"/></svg>Sessions</a>
+        </nav>
+        <div class="spacer"></div>
+        <div class="goal-chip"><div class="label">Your goal</div><div class="value">Consistent $10k months</div></div>
+      </aside>
+      <div class="app-main">
+        <div class="glow-el"></div>
+        <span class="glow-hint">glow = <span data-pct>34%</span> of goal</span>
+        <header class="head-row">
+          <div><span class="eyebrow">Your journey with Sarah</span><h3 class="greeting">Phase 2 · Launch your ads</h3></div>
+          <div class="metric-chip">Revenue <strong data-rev>$4,192</strong> / $10k</div>
+        </header>
+        <div class="trail">
+          <div class="titem"><div class="rail"><span class="dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind done-k">Task · done</span><span class="ttitle">Set up your ad account</span></div></div></div>
+          <div class="titem current"><div class="rail"><span class="dot current"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind now-k">You are here</span><span class="ttitle">Draft 3 ad hooks for the spring campaign</span></div><button type="button" class="btn">Start session</button></div></div>
+          <div class="titem"><div class="rail"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind">Check-in · Friday</span><span class="ttitle">Report ad spend &amp; revenue</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7b ================= -->
+  <section class="variant">
+    <h2>7b · Progress ring around the coach</h2>
+    <p class="note">
+      A thin ring closes around Sarah's avatar as the metric climbs — the goal is literally wrapped around
+      the relationship. Sharp at a glance, works at any size, and the little percent pill gives the exact
+      number only when you look for it.
+    </p>
+    <div class="frame" data-frame>
+      <aside class="sidebar">
+        <div class="agent-row">
+          <div class="ring-wrap">
+            <svg class="ring" viewBox="0 0 52 52" aria-hidden="true">
+              <circle class="ring-track" cx="26" cy="26" r="23"></circle>
+              <circle class="ring-fill" cx="26" cy="26" r="23" data-ring></circle>
+            </svg>
+            <div class="avatar">SB</div>
+            <span class="ring-pct" data-pct>34%</span>
+          </div>
+          <div><div class="agent-name">Sarah Bennett</div><div class="agent-sub">Marketing Coach</div></div>
+        </div>
+        <nav class="nav">
+          <a href="#" class="active" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="5"/></svg>Journey</a>
+          <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 1 1-3.1-6.3L21 4v6h-6"/></svg>Sessions</a>
+        </nav>
+        <div class="spacer"></div>
+        <div class="goal-chip"><div class="label">Your goal</div><div class="value">Consistent $10k months</div></div>
+      </aside>
+      <div class="app-main">
+        <header class="head-row">
+          <div><span class="eyebrow">Your journey with Sarah</span><h3 class="greeting">Phase 2 · Launch your ads</h3></div>
+          <div class="metric-chip">Revenue <strong data-rev>$4,192</strong> / $10k</div>
+        </header>
+        <div class="trail">
+          <div class="titem"><div class="rail"><span class="dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind done-k">Task · done</span><span class="ttitle">Set up your ad account</span></div></div></div>
+          <div class="titem current"><div class="rail"><span class="dot current"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind now-k">You are here</span><span class="ttitle">Draft 3 ad hooks for the spring campaign</span></div><button type="button" class="btn">Start session</button></div></div>
+          <div class="titem"><div class="rail"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind">Check-in · Friday</span><span class="ttitle">Report ad spend &amp; revenue</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7c ================= -->
+  <section class="variant">
+    <h2>7c · The sidebar tide rises</h2>
+    <p class="note">
+      The sidebar's cyan tint becomes a water level that rises with revenue. Quietly present on every
+      screen, and the "$10k at the top" framing writes itself — when the sidebar is full, you're there.
+    </p>
+    <div class="frame" data-frame>
+      <aside class="sidebar">
+        <div class="tide"></div>
+        <span class="tide-label"><span data-rev>$4,192</span> · rising</span>
+        <div class="agent-row"><div class="avatar">SB</div><div><div class="agent-name">Sarah Bennett</div><div class="agent-sub">Marketing Coach</div></div></div>
+        <nav class="nav">
+          <a href="#" class="active" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="5"/></svg>Journey</a>
+          <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 1 1-3.1-6.3L21 4v6h-6"/></svg>Sessions</a>
+        </nav>
+        <div class="spacer"></div>
+        <div class="goal-chip"><div class="label">Your goal · at the top</div><div class="value">Consistent $10k months</div></div>
+      </aside>
+      <div class="app-main">
+        <header class="head-row">
+          <div><span class="eyebrow">Your journey with Sarah</span><h3 class="greeting">Phase 2 · Launch your ads</h3></div>
+          <div class="metric-chip">Revenue <strong data-rev>$4,192</strong> / $10k</div>
+        </header>
+        <div class="trail">
+          <div class="titem"><div class="rail"><span class="dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind done-k">Task · done</span><span class="ttitle">Set up your ad account</span></div></div></div>
+          <div class="titem current"><div class="rail"><span class="dot current"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind now-k">You are here</span><span class="ttitle">Draft 3 ad hooks for the spring campaign</span></div><button type="button" class="btn">Start session</button></div></div>
+          <div class="titem"><div class="rail"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind">Check-in · Friday</span><span class="ttitle">Report ad spend &amp; revenue</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7d ================= -->
+  <section class="variant">
+    <h2>7d · Sunrise over the horizon</h2>
+    <p class="note">
+      A faint horizon line sits behind the header; the sun climbs toward the summit flag as revenue grows,
+      cresting the peak at goal. The most metaphorical of the five — pairs naturally with the journey/summit
+      language, and it makes the top of every day's home screen feel like weather.
+    </p>
+    <div class="frame" data-frame>
+      <aside class="sidebar">
+        <div class="agent-row"><div class="avatar">SB</div><div><div class="agent-name">Sarah Bennett</div><div class="agent-sub">Marketing Coach</div></div></div>
+        <nav class="nav">
+          <a href="#" class="active" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="5"/></svg>Journey</a>
+          <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 1 1-3.1-6.3L21 4v6h-6"/></svg>Sessions</a>
+        </nav>
+        <div class="spacer"></div>
+        <div class="goal-chip"><div class="label">Your goal</div><div class="value">Consistent $10k months</div></div>
+      </aside>
+      <div class="app-main">
+        <div class="horizon">
+          <div class="sun" data-sun></div>
+          <svg viewBox="0 0 700 150" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M0 118 L140 104 L260 112 L390 84 L520 96 L610 62 L700 74" fill="none" stroke="rgba(0,139,167,0.18)" stroke-width="2"/>
+            <path d="M0 118 L140 104 L260 112 L390 84 L520 96 L610 62 L700 74 L700 150 L0 150 Z" fill="rgba(0,180,212,0.045)"/>
+          </svg>
+          <span class="flag" data-flag style="left: calc(87% - 6px); top: 34px;">🚩</span>
+        </div>
+        <header class="head-row">
+          <div><span class="eyebrow">Your journey with Sarah</span><h3 class="greeting">Phase 2 · Launch your ads</h3></div>
+          <div class="metric-chip">Revenue <strong data-rev>$4,192</strong> / $10k</div>
+        </header>
+        <div class="trail" style="margin-top: 26px;">
+          <div class="titem"><div class="rail"><span class="dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind done-k">Task · done</span><span class="ttitle">Set up your ad account</span></div></div></div>
+          <div class="titem current"><div class="rail"><span class="dot current"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind now-k">You are here</span><span class="ttitle">Draft 3 ad hooks for the spring campaign</span></div><button type="button" class="btn">Start session</button></div></div>
+          <div class="titem"><div class="rail"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind">Check-in · Friday</span><span class="ttitle">Report ad spend &amp; revenue</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 7e ================= -->
+  <section class="variant">
+    <h2>7e · Constellation — every task lights a star</h2>
+    <p class="note">
+      A faint scatter of stars in the background; each completed task lights one, tracing a constellation
+      toward a gold goal star. Unlike the other four this one tracks <em>effort</em> (tasks done) rather than
+      the revenue metric, so the sky rewards showing up even in a flat week — and a full sky at goal is a
+      screenshot moment.
+    </p>
+    <div class="frame" data-frame>
+      <aside class="sidebar">
+        <div class="agent-row"><div class="avatar">SB</div><div><div class="agent-name">Sarah Bennett</div><div class="agent-sub">Marketing Coach</div></div></div>
+        <nav class="nav">
+          <a href="#" class="active" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="5"/></svg>Journey</a>
+          <a href="#" onclick="return false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 1 1-3.1-6.3L21 4v6h-6"/></svg>Sessions</a>
+        </nav>
+        <div class="spacer"></div>
+        <div class="goal-chip"><div class="label">Your goal</div><div class="value">Consistent $10k months</div></div>
+      </aside>
+      <div class="app-main">
+        <div class="sky" data-sky>
+          <svg viewBox="0 0 700 470" preserveAspectRatio="none" aria-hidden="true">
+            <path class="constellation-line" d="M60 400 L150 340 L110 260 L220 230 L310 280 L400 200 L370 120 L480 150 L560 90 L640 60"/>
+          </svg>
+          <!-- stars positioned along the line; lit count driven by slider -->
+          <span class="star" style="left: calc(60/700*100% - 2px); top: calc(400/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(150/700*100% - 2px); top: calc(340/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(110/700*100% - 2px); top: calc(260/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(220/700*100% - 2px); top: calc(230/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(310/700*100% - 2px); top: calc(280/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(400/700*100% - 2px); top: calc(200/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(370/700*100% - 2px); top: calc(120/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(480/700*100% - 2px); top: calc(150/470*100% - 2px);"></span>
+          <span class="star" style="left: calc(560/700*100% - 2px); top: calc(90/470*100% - 2px);"></span>
+          <span class="star goal-star" style="left: calc(640/700*100% - 4px); top: calc(60/470*100% - 4px);"></span>
+        </div>
+        <span class="sky-count"><span data-stars>3</span> of 10 tasks lit</span>
+        <header class="head-row">
+          <div><span class="eyebrow">Your journey with Sarah</span><h3 class="greeting">Phase 2 · Launch your ads</h3></div>
+          <div class="metric-chip">Revenue <strong data-rev>$4,192</strong> / $10k</div>
+        </header>
+        <div class="trail">
+          <div class="titem"><div class="rail"><span class="dot done"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind done-k">Task · done</span><span class="ttitle">Set up your ad account</span></div></div></div>
+          <div class="titem current"><div class="rail"><span class="dot current"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind now-k">You are here</span><span class="ttitle">Draft 3 ad hooks for the spring campaign</span></div><button type="button" class="btn">Start session</button></div></div>
+          <div class="titem"><div class="rail"><span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><span class="stem"></span></div><div class="tcard"><div class="txt"><span class="kind">Check-in · Friday</span><span class="ttitle">Report ad spend &amp; revenue</span></div></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="note">
+  All five run off one number (percent of goal; the constellation maps it to tasks completed). In production
+  the driver is the plan's primary metric from check-ins, so the ambient element only moves when the client
+  reports progress — which quietly makes check-ins feel worth doing.
+</footer>
+
+<script>
+  const slider = document.getElementById('prog');
+  const BASE = 1200, GOAL = 10000;
+  const CIRC = 2 * Math.PI * 23;
+
+  function update() {
+    const p = slider.value / 100;
+    const rev = Math.round(BASE + p * (GOAL - BASE));
+    const revText = '$' + rev.toLocaleString('en-US');
+    const pctText = Math.round(p * 100) + '%';
+
+    document.getElementById('pct').textContent = pctText;
+    document.getElementById('rev').textContent = revText;
+    document.querySelectorAll('[data-pct]').forEach((el) => (el.textContent = pctText));
+    document.querySelectorAll('[data-rev]').forEach((el) => (el.textContent = revText));
+
+    document.querySelectorAll('[data-frame]').forEach((f) => f.style.setProperty('--p', p));
+
+    // 7b ring
+    document.querySelectorAll('[data-ring]').forEach((r) => {
+      r.setAttribute('stroke-dasharray', CIRC);
+      r.setAttribute('stroke-dashoffset', CIRC * (1 - p));
+    });
+
+    // 7d sun: travels along the ridge from left valley to the flagged peak
+    document.querySelectorAll('[data-sun]').forEach((sun) => {
+      const x = 4 + p * 81;               // percent across
+      const y = 96 - p * 82;              // climbs as it travels
+      sun.style.left = 'calc(' + x + '% - 17px)';
+      sun.style.top = y + 'px';
+      sun.style.opacity = 0.35 + p * 0.65;
+    });
+    document.querySelectorAll('[data-flag]').forEach((fl) => (fl.style.opacity = p >= 0.97 ? 1 : 0.45));
+
+    // 7e stars
+    document.querySelectorAll('[data-sky]').forEach((sky) => {
+      const stars = sky.querySelectorAll('.star');
+      const lit = Math.round(p * stars.length);
+      stars.forEach((s, i) => s.classList.toggle('lit', i < lit));
+      const counter = sky.parentElement.querySelector('[data-stars]');
+      if (counter) counter.textContent = lit;
+    });
+  }
+
+  slider.addEventListener('input', update);
+  update();
+</script>
